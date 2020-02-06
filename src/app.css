@@ -1,0 +1,120 @@
+fieldset {
+	border: 1px groove #ddd !important;
+}
+
+.donatebox {
+	border-style: dashed;
+}
+.feedbackform {
+	border-style: ridge;
+}
+
+[name=dates] {
+	width: 10ch;
+	min-width: 12ch;
+}
+
+table {
+	font-size: .75rem;
+	padding: .1rem;
+}
+.stocktable {
+	border-collapse: separate; 
+   border-spacing: 0px;
+}
+
+.stocktable .sectionborder {
+	border-right: 1px solid black;
+}
+
+.stocktable .colborder {
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+ }
+
+h2 span {
+	font-size: .5em;
+} 
+th input {
+	width: 5em;
+	border: none;
+}
+.graphic {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	margin-left: auto;
+	margin-right: auto;
+	border-style: solid;
+}
+
+.navbar {
+	border: 1px none;
+	
+	
+}
+.stockform {
+	border-bottom: 1px solid;
+	
+	background: linear-gradient(90deg, rgb(7, 106, 255) 0%, rgb(199, 225, 255) 100%);
+}
+
+ fieldset.form-group  > *
+{
+	 margin-left: 1em;
+}
+
+
+/*   #refresh ,   */
+/*
+::::::::::::::::::::::::::::::::::::::::::::::::::::
+Bootstrap 4 breakpoints   input[type=radio], color: black;background-color: rgb(7, 106, 255);
+*/
+
+/* 
+Extra small devices (portrait phones, less than 576px) 
+No media query since this is the default in Bootstrap because it is "mobile first"
+*/
+
+/* Small devices (landscape phones, 576px and up) */
+
+@media (min-width: 576px) {
+	.form-check
+	{
+	  
+		margin-left: auto;
+  }
+  
+	.form-inline {
+		padding: 10px;
+	}
+	
+	.form-inline * {
+		margin: 3px 3px ;
+	}
+	
+	legend {
+		font-size: 1em !important;
+		text-align: left !important;
+		width: auto;
+		padding: 0 10px;
+	}
+}
+
+/* Medium devices (tablets, 768px and up) The navbar toggle appears at this breakpoint */
+
+@media (min-width: 768px) {
+	.graphic {
+		max-width: 90%;
+	}
+}
+
+/* Large devices (desktops, 992px and up) */
+
+@media (min-width: 992px) {}
+
+/* Extra large devices (large desktops, 1200px and up) */
+
+@media (min-width: 1200px) {}
+
+
