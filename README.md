@@ -1,7 +1,7 @@
 
-A react.js website that is a stock option tool for investors and speculators that shows possible outcomes for the stock options you select.
+A react.js website that is a stock option tool for investors and speculators that calculates possible outcomes for the stock options you select.
 
-A working website can be found [here](https://resultify.live/optionswhatif/).
+View the working website [here](https://resultify.live/optionswhatif/).
 
 To run your own build you need to have a TD Ameritrade Developer Account, see https://developer.tdameritrade.com,  and place the following in a ".env" file in the root of your project
 ### `REACT_APP_TD_CLIENT_ID=<your consumer key>@AMER.OAUTHAP`
