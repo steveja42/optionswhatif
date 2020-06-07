@@ -1,6 +1,6 @@
 
 import ReactGA from 'react-ga'; // https://github.com/react-ga/react-ga
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
@@ -19,14 +19,79 @@ import {
   Link,
   Switch,
   Route,
-  NavLink,
+  NavLink, useLocation,
 } from "react-router-dom";
-import { createBrowserHistory } from 'history';
 
-const history = createBrowserHistory();
-
+const log = console.log
 console.log(window.location.hostname)
 const googleAnalyticsTrackingID = process.env.REACT_APP_GOOGLE_TRACKING_ID
+if (googleAnalyticsTrackingID) {
+  ReactGA.initialize(googleAnalyticsTrackingID);   // Add your tracking ID created from https://analytics.google.com/analytics/web/#home/
+}
+
+function setPageview(url) {
+  log(url)
+  ReactGA.pageview(url)
+}
+
+function usePageViews() {
+  let location = useLocation()
+
+  useEffect(() => {
+    setPageview(location.pathname)
+  }, [location.pathname])
+}
+
+function App() {
+
+  usePageViews()
+
+  
+
+  return <div className="App">
+
+    < header className="App-header" >
+
+      < Navbar bg="light" expand="sm" >
+        <Navbar.Brand as={NavLink} to="/">
+          <img src="../favicon.ico" width="30" height="30" className="d-inline-block align-top" alt="" />
+          {' '}
+          OptionsWhatIf
+          </Navbar.Brand>
+        <Nav >
+          <Nav.Link as={NavLink} to="/about">About</Nav.Link>
+          <Nav.Link as={NavLink} to="/aboutaddon">About Sheets Add-On</Nav.Link>
+          <Nav.Link as={NavLink} to="/feedback" activeClassName="navselected">Give Feedback</Nav.Link>
+          <Nav.Link as={NavLink} to="/optionprices" activeClassName="navselected">Option Prices</Nav.Link>
+        </Nav>
+      </Navbar >
+    </header >
+    <Switch>
+      <Route path="/aboutaddon">
+        <Container> <AboutSheetsAddon /> </Container>
+      </Route>
+      <Route path="/about">
+        <Container> <AboutWebApp /> </Container>
+      </Route>
+      <Route path="/feedback">
+        <Container>
+          <Row style={{ alignItems: "flex-start" }}>
+            <Col sm className="feedbackform">  <FeedbackForm /></Col>
+            <Col sm='auto' className=" rounded donatebox">  <Donate /></Col>
+          </Row>
+        </Container>
+      </Route>
+      <Route path="/optionprices">
+        <OptionPrices />
+      </Route>
+      <Route path="/">
+        <OptionsWhatIf />
+      </Route>
+    </Switch>
+  </div >
+
+}
+
 
 function AboutSheetsAddon() {
   return (
@@ -46,7 +111,7 @@ function AboutSheetsAddon() {
       <Image src={sheetsAddOnScreenshot} alt='screenshot of Google Sheet' className="graphic" />
     </div>)
 }
- 
+
 function AboutWebApp() {
   return (
     <div>
@@ -55,8 +120,8 @@ function AboutWebApp() {
 
       <p>It can help guide your investment decisions by showing the potential stock option profit and ROI at various price points.</p>
       <p>
-        The OptionsWhatIf Web App can be found 
-    <Link to = "/"> here</Link>.
+        The OptionsWhatIf Web App can be found
+    <Link to="/"> here</Link>.
      </p>
 
       <p>Enter a stock symbol (US markets) and choose the desired option expiration dates and the page will show price data and potential
@@ -65,62 +130,4 @@ function AboutWebApp() {
       <Image src={webAppScreenshot} alt='screenshot of Web App' className="graphic" />
     </div>)
 }
-
-class App extends React.Component { 
-  constructor () {
-    super()
-    if (googleAnalyticsTrackingID) {
-        ReactGA.initialize(googleAnalyticsTrackingID);   // Add your tracking ID created from https://analytics.google.com/analytics/web/#home/
-        ReactGA.pageview(window.location.pathname + window.location.search);
-        history.listen(location => ReactGA.pageview(location.pathname)) //With this, we ask React Router to handle the tracking for us.
-    }
-  } 
-
-  render() {
-    return <div className="App">
-
-      < header className="App-header" >
-
-        < Navbar bg="light" expand="sm" >
-          <Navbar.Brand as={NavLink} to="/">
-            <img src="../favicon.ico" width="30" height="30" className="d-inline-block align-top" alt="" />
-            {' '}
-            OptionsWhatIf
-          </Navbar.Brand>
-          <Nav >
-            <Nav.Link as={NavLink} to="/about">About</Nav.Link>
-            <Nav.Link as={NavLink} to="/aboutaddon">About Sheets Add-On</Nav.Link>
-            <Nav.Link as={NavLink} to="/feedback" activeClassName="navselected">Give Feedback</Nav.Link>
-            <Nav.Link as={NavLink} to="/optionprices" activeClassName="navselected">Option Prices</Nav.Link>
-          </Nav>
-        </Navbar >
-      </header >
-      <Switch>
-        <Route path="/aboutaddon">
-          <Container> <AboutSheetsAddon /> </Container>
-        </Route>
-        <Route path="/about">
-          <Container> <AboutWebApp /> </Container>
-        </Route>
-        <Route path="/feedback">
-          <Container>
-            <Row style={{ alignItems: "flex-start" }}>
-              <Col sm className="feedbackform">  <FeedbackForm /></Col>
-              <Col sm='auto' className=" rounded donatebox">  <Donate /></Col>
-            </Row>
-          </Container>
-        </Route>
-        <Route path="/optionprices">
-          <OptionPrices />
-        </Route>
-        <Route path="/">
-          <OptionsWhatIf />
-        </Route>
-      </Switch>
-    </div >
-
-  }
-
-}
-
 export default App;

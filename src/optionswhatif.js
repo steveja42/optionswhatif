@@ -382,11 +382,11 @@ function getProfit(pricePoint, price, strike, type) {
 			profit = strike - price - pricePoint
 			break
 		case 'CALL':
-			profit = pricePoint - strike + price
+			profit = pricePoint - (strike + price)
 			break
 		case 'straddle':
 			if (pricePoint >= strike)
-				profit = pricePoint - strike + price
+				profit = pricePoint - (strike + price)
 			else
 				profit = strike - price - pricePoint
 			break
