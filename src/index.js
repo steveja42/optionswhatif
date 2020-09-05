@@ -5,9 +5,9 @@ import App from './app';
 //import App from './app-old-tabbed';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from "react-router-dom"
-
+//basename='/optionswhatif/'
 ReactDOM.render(
-	<BrowserRouter basename='/optionswhatif/'>
+	<BrowserRouter > 
 	  <App />
 	</BrowserRouter>,
 	document.getElementById("root")
