@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form'
 import Container from "react-bootstrap/Container"
 import Table from 'react-bootstrap/Table'
 import  * as td from './td'
-import {StockInfo} from './optionswhatif'
+import {StockInfo} from './owicomponents'
 
 const log = console.log
 
