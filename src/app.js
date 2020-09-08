@@ -46,8 +46,6 @@ function App() {
 
   usePageViews()
 
-  
-
   return <div className="App">
 
     < header className="App-header" >
@@ -60,7 +58,7 @@ function App() {
           </Navbar.Brand>
         <Nav >
           <Nav.Link as={NavLink} to="/about">About</Nav.Link>
-          <Nav.Link as={NavLink} to="/aboutaddon">About Sheets Add-On</Nav.Link>
+          <Nav.Link as={NavLink} to="/aboutaddon">Sheets Add-On</Nav.Link>
           <Nav.Link as={NavLink} to="/feedback" activeClassName="navselected">Give Feedback</Nav.Link>
           <Nav.Link as={NavLink} to="/optionprices" activeClassName="navselected">Option Prices</Nav.Link>
         </Nav>

@@ -8,13 +8,13 @@ const log = console.log
  *
  */
 export function OptionExpirations(props) {
-	const { data, dates, type } = props
+	const { data, dates, type, amBuying } = props
 	let expDates
 	if (!data || (data.putExpDateMap && (!dates || dates.length === 0))) {
 		return null
 	}
 	if (data.putExpDateMap)
-		expDates = dates.map(date => <OptionExpiration title={date.slice(0, 10)} key={date} data={data} type={type} date={date} />)   //data=optionMap[date]
+		expDates = dates.map(date => <OptionExpiration title={date.slice(0, 10)} key={date} data={data} type={type} date={date} amBuying={amBuying} />)   //data=optionMap[date]
 
 	return (
 		<div>
@@ -28,7 +28,7 @@ export function OptionExpirations(props) {
  * @param event
  */
 function OptionExpiration(props) {
-	const { title, data, type, date } = props
+	const { title, data, type, date, amBuying } = props
 	const underlyingPrice = Number(data && data.underlying.last)
 	let [pricePoints, setPricePoints] = useState(getDefaultPricePoints(underlyingPrice, type))
 	let [previousType, setPreviousType] = useState(type)
@@ -53,7 +53,7 @@ function OptionExpiration(props) {
 	let preHeaderRow = preHeaders.map(x => <th key={i++} className='noborder'>{x}</th>)
 	let caption = `${title} ${type}'s`
 	//const type = Object.values(data)[0][0].putCall
-	let priceRows = Object.entries(data.putExpDateMap[date]).map(([strike, value]) => <OptionRow key={strike} strike={strike} data={data} type={type} date={date} put={value[0]} pricePoints={pricePoints} call={data.callExpDateMap[date][strike][0]} />)   //data={value[0]}
+	let priceRows = Object.entries(data.putExpDateMap[date]).map(([strike, value]) => <OptionRow key={strike} strike={strike} data={data} type={type} amBuying={amBuying} date={date} put={value[0]} pricePoints={pricePoints} call={data.callExpDateMap[date][strike][0]} />)   //data={value[0]}
 	// [strike, Utilities.formatDate(new Date(value[0].quoteTimeInLong), "GMT-8", "MMM-dd' 'HH:mm:ss"), value[0].last, value[0].markChange, value[0].bid, value[0].ask, value[0].totalVolume, value[0].openInterest]);
 			//<h3>{`${title} ${type}'s`}</h3>
 	return (
@@ -146,16 +146,22 @@ const pricePointPercentages = [.10, .33, .5, .66, .9, 1]
 /**
  * returns the profit at a price point
  * 
- */
-function getProfit(pricePoint, price, strike, type) {
+ */       
+function getProfit(pricePoint, price, strike, type, amBuying) {
 	let profit
 	switch (type) {
 		case 'PUT':
-			profit = strike - price - pricePoint
+			if (amBuying)
+				profit = strike - price - pricePoint
+			else
+				profit = (pricePoint> strike) ? price: price- (strike-pricePoint)
 			break
 		case 'CALL':
-			profit = pricePoint - (strike + price)
-			break
+			if (amBuying)
+				profit = pricePoint - (strike + price)
+				else
+					profit = (pricePoint < strike) ? price: price- (pricePoint-strike)
+		break
 		case 'straddle':
 			if (pricePoint >= strike)
 				profit = pricePoint - (strike + price)
@@ -164,7 +170,10 @@ function getProfit(pricePoint, price, strike, type) {
 			break
 		//no default
 	}
-	return profit.toLocaleString(undefined, { maximumFractionDigits: 2 })
+	if (amBuying && (profit < -price))
+		profit = -price
+
+	return profit
 }
 
 /**
@@ -191,6 +200,9 @@ function getDefaultPricePoints(underlyingPrice, type) {
 function currencyFormat(num) {
 	return num.toLocaleString(undefined, { maximumFractionDigits: 2, minimumFractionDigits: 2 })
 }
+function percentFormat(num) {
+	return num.toLocaleString(undefined, { style: "percent", maximumFractionDigits: 2 })
+}
 
 const optionDataFields = ["bid", "ask", "last"]
 const legDataFields = ["bid", "ask", "totalVolume"]
@@ -199,7 +211,7 @@ const legDataFields = ["bid", "ask", "totalVolume"]
  * 
  */
 function OptionRow(props) {
-	const { strike, data, type, put, call, pricePoints } = props
+	const { strike, data, type, amBuying, put, call, pricePoints } = props
 	if (!data)
 		return null
 	let leftPart, coreVals = []
@@ -254,10 +266,10 @@ function OptionRow(props) {
 	let profitsPart = []
 	i = 0
 	for (let pricePoint of pricePoints) {
-		let profit = getProfit(pricePoint, price, Number(strike), type)
+		let profit = getProfit(pricePoint, price, Number(strike), type, amBuying)
 		let roi = profit / price
-		profitsPart.push(<td key={`profit${i}`}> {profit}</td>)
-		profitsPart.push(<td key={`roi${i++}`}> {roi.toLocaleString(undefined, { style: "percent", maximumFractionDigits: 2 })}</td>)
+		profitsPart.push(<td key={`profit${i}`}> {currencyFormat(profit)}</td>)
+		profitsPart.push(<td key={`roi${i++}`}> {percentFormat(roi)}</td>)
 	}
 	return (
 		<tr>
@@ -279,7 +291,7 @@ export function StockInfo(props) {
 
 	else	{
 		let underlying = stockData.underlying
-		info = <div><h2 style={{display:'inline'}}>{underlying.symbol} :{underlying.last} <span>  {stockData.isDelayed ? ' (delayed)':'' } </span></h2> <span> {' '}{underlying.description}</span></div>
+		info = <div><h2 style={{display:'inline'}}>{underlying.symbol} :{currencyFormat(underlying.last)} <span>  {stockData.isDelayed ? ' (delayed)':'' } </span></h2> <span> {' '}{underlying.description}</span></div>
 	}
 	return (
 		<div>
