@@ -61,8 +61,7 @@ function OptionExpiration(props) {
 			
 			<h4>{caption}</h4>
 			<Table id="stocktable" className="stocktable"  striped hover size="sm">
-			<thead> 	{preHeaderRow}	</thead>
-
+			<thead><tr>{preHeaderRow}</tr></thead>
 				<thead><PricePointsHeaderRow underlyingPrice={underlyingPrice} type={type} pricePoints={pricePoints} onPricePointChange={updateElement} /></thead>
 				<thead><OptionHeaderRow type={type} /></thead>
 				<tbody>
@@ -116,7 +115,7 @@ function PricePointsHeaderRow(props) {
 		corePart = ppSingleHeaders.map(x => <th key={i++} className={(i === 1) ? 'colborder' : undefined}>{x}</th>)
 
 	let ppPart = []
-	let priceChangeMessage = 'If Price Goes To'
+	//let priceChangeMessage = 'If Price Goes To'
 
 	//for (; i < numBlankRows; i++) {
 	//	ppPart.push(<th key={i}> </th>)
@@ -124,7 +123,7 @@ function PricePointsHeaderRow(props) {
 	//ppPart.push(<th key={i++}>{priceChangeMessage}</th>)
 	let j = 0
 	for (let pricePoint of pricePoints) {
-		let priceChange = pricePoint / underlyingPrice - 1
+		let priceChange = parseLocaleNumber(pricePoint) / underlyingPrice - 1
 
 
 		ppPart.push(<th key={i++}>
@@ -141,7 +140,6 @@ function PricePointsHeaderRow(props) {
 }
 
 
-const pricePointPercentages = [.10, .33, .5, .66, .9, 1]
 
 /**
  * returns the profit at a price point
@@ -154,13 +152,13 @@ function getProfit(pricePoint, price, strike, type, amBuying) {
 			if (amBuying)
 				profit = strike - price - pricePoint
 			else
-				profit = (pricePoint> strike) ? price: price- (strike-pricePoint)
+				profit = (pricePoint> strike) ? price: Math.max(price- (strike-pricePoint),0)
 			break
 		case 'CALL':
 			if (amBuying)
 				profit = pricePoint - (strike + price)
 				else
-					profit = (pricePoint < strike) ? price: price- (pricePoint-strike)
+					profit = (pricePoint < strike) ? price: Math.max(price- (pricePoint-strike),0)
 		break
 		case 'straddle':
 			if (pricePoint >= strike)
@@ -175,6 +173,8 @@ function getProfit(pricePoint, price, strike, type, amBuying) {
 
 	return profit
 }
+const pricePointPercentages = [0, .10, .33, .5, .66, .9, 1]
+//const pricePointPercentages = [.10, .33, .5, .66, .9, 1]
 
 /**
  * returns array of the price points used
@@ -266,7 +266,7 @@ function OptionRow(props) {
 	let profitsPart = []
 	i = 0
 	for (let pricePoint of pricePoints) {
-		let profit = getProfit(pricePoint, price, Number(strike), type, amBuying)
+		let profit = getProfit(parseLocaleNumber(pricePoint), price, Number(strike), type, amBuying)
 		let roi = profit / price
 		profitsPart.push(<td key={`profit${i}`}> {currencyFormat(profit)}</td>)
 		profitsPart.push(<td key={`roi${i++}`}> {percentFormat(roi)}</td>)
@@ -277,6 +277,29 @@ function OptionRow(props) {
 		</tr>
 	)
 }
+
+function parseLocaleNumber(str) {
+	// Detect the user's locale decimal separator:
+	var decimalSeparator = (1.1).toLocaleString().substring(1, 2);
+	// Detect the user's locale thousand separator:
+	var thousandSeparator = (1000).toLocaleString().substring(1, 2);
+	// In case there are locales that don't use a thousand separator
+	if (thousandSeparator.match(/\d/))
+	  thousandSeparator = '';
+
+	if (decimalSeparator === '.')
+		decimalSeparator = `/.`
+	if (thousandSeparator === '.')
+		thousandSeparator = `/.`
+
+ 
+	str = str
+	.replace(new RegExp(thousandSeparator, 'g'), '')
+	.replace(new RegExp(decimalSeparator), '.')
+ 
+	return parseFloat(str);
+ }
+
 /**
  * renders underlying stock price
  * 
@@ -286,7 +309,7 @@ export function StockInfo(props) {
 	let info 
 	if (!stockData)
 		return null
-	if (stockData.status != 'SUCCESS')
+	if (stockData.status !== 'SUCCESS')
 		info = <h2> no option data found</h2>
 
 	else	{
