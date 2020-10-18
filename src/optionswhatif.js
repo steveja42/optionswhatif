@@ -1,14 +1,15 @@
 
 import React from 'react';
 import Button from "react-bootstrap/Button";
+import ToggleButton from 'react-bootstrap/ToggleButton'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Alert from 'react-bootstrap/Alert'
 import Form from 'react-bootstrap/Form'
 import Container from "react-bootstrap/Container"
 import * as td from './td'
-import {OptionExpirations,StockInfo} from './owicomponents'
+import {OptionExpirations, StockInfo } from './owicomponents'
 
 const log = console.log
-
 
 //see https://developer.tdameritrade.com/option-chains/apis/get/marketdata/chains for more info
 export class OptionsWhatIf extends React.Component {
@@ -129,7 +130,7 @@ export class OptionsWhatIf extends React.Component {
 		const optionMap = data.putExpDateMap //(type === "PUT") ? data.putExpDateMap : data.callExpDateMap;
 		if (optionMap)
 			dateOptions = Object.keys(optionMap).map((date) => <option key={date} value={date}>{date.slice(0, 10)}</option>)
-		
+
 		this.setState({ dateOptions })
 	}
 
@@ -141,7 +142,7 @@ export class OptionsWhatIf extends React.Component {
 		let [result, error] = await td.getOptionChain(symbol.toUpperCase(), undefined, strikeCount) //get(route)
 		this.fetching = false
 		if (result) {
-			 if (this.areNoWrongExpirationDates(result)) {
+			if (this.areNoWrongExpirationDates(result)) {
 				this.setState({ data: result })
 				this.setState({ showFailure: false })
 			}
@@ -159,7 +160,7 @@ export class OptionsWhatIf extends React.Component {
 	}
 	//sometimes TD sends us wrong expiration dates, so check for that
 	areNoWrongExpirationDates(data) {
-		if ((data.status == 'SUCCESS') && this.state.datesSelected) {
+		if ((data.status === 'SUCCESS') && this.state.datesSelected) {
 			const optionMap = data.putExpDateMap // (this.state.type === "PUT") ? dataToCheck.putExpDateMap : dataToCheck.callExpDateMap;
 			for (let date of this.state.datesSelected) {
 				if (!optionMap[date]) {
@@ -204,16 +205,21 @@ export class OptionsWhatIf extends React.Component {
 								<option value="straddle">Straddle</option>
 							</Form.Control>
 						</Form.Group>
-						<Form.Group as="fieldset" controlId="type" disabled={this.state.strategy !== 'single'}>
-							<legend>Option Type</legend>
-							<Form.Check type='radio' id='PUT' value='PUT' label='Put' checked={(this.state.type === 'PUT')} onChange={this.optionTypeChanged} />
-							<Form.Check type='radio' id='CALL' value='CALL' label='Call' checked={(this.state.type === 'CALL')} onChange={this.optionTypeChanged} />
-						</Form.Group>
-						<Form.Group as="fieldset" controlId="buySell" disabled={this.state.strategy !== 'single'}>
-							<legend>.</legend>
-							<Form.Check type='radio' name="buySell" id='BUY' value='BUY' label='Buy' checked={(this.state.buySell === 'BUY')} onChange={this.handleChange} />
-							<Form.Check type='radio' name="buySell" id='SELL' value='SELL' label='Sell' checked={(this.state.buySell === 'SELL')} onChange={this.handleChange} />
-						</Form.Group>
+
+					   <ButtonGroup as="fieldset" toggle vertical className="mytb" disabled={this.state.strategy !== 'single'}>
+							<ToggleButton type='radio' variant="light" id='PUT' value='PUT' label='Put' checked={(this.state.type === 'PUT')} disabled={this.state.strategy !== 'single'} onChange={this.optionTypeChanged}>Put
+							</ToggleButton>
+							<ToggleButton type='radio' variant="light" id='CALL' value='CALL' label='Call' checked={(this.state.type === 'CALL')} disabled={this.state.strategy !== 'single'} onChange={this.optionTypeChanged}>Call
+							</ToggleButton>
+						</ButtonGroup>
+
+					   <ButtonGroup toggle vertical className="mytb  " disabled={this.state.strategy !== 'single'}>
+							<ToggleButton type='radio' variant="light" name="buySell" id='BUY' value='BUY' label='Buy' checked={(this.state.buySell === 'BUY')} disabled={this.state.strategy !== 'single'} onChange={this.handleChange}>Buy
+							</ToggleButton>
+							<ToggleButton type='radio' variant="light" name="buySell" id='SELL' value='SELL' label='Sell' checked={(this.state.buySell === 'SELL')} disabled={this.state.strategy !== 'single'} onChange={this.handleChange}>Sell
+							</ToggleButton>
+						</ButtonGroup>
+						
 						<Form.Group controlId="strikeCount" >
 							<label>Strikes</label>
 							<Form.Control as="select" name="strikeCount" onChange={this.handleChange} value={this.state.strikeCount}>
@@ -243,8 +249,8 @@ export class OptionsWhatIf extends React.Component {
 				</Container>
 				<Container fluid>
 					<StockInfo data={this.state.data ? this.state.data : null} />
-					{!this.dataError && this.state.data && this.state.data.status == 'SUCCESS' &&
-						<OptionExpirations data={this.state.data} dates={this.state.datesSelected} type={this.state.strategy === 'single' ? this.state.type : this.state.strategy} amBuying={this.state.buySell==="BUY"} />
+					{!this.dataError && this.state.data && this.state.data.status === 'SUCCESS' &&
+						<OptionExpirations data={this.state.data} dates={this.state.datesSelected} type={this.state.strategy === 'single' ? this.state.type : this.state.strategy} amBuying={this.state.buySell === "BUY"} />
 					}
 
 				</Container>

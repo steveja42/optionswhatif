@@ -1,5 +1,16 @@
-fieldset {
-	border: 1px groove #ddd !important;
+.mytb.mytb:not(:disabled) label.active {
+	background-color: white;
+	color: black;
+	border-color: #313510ea;
+}
+
+/* 0062cc   cc6d00  background-color: #393f46;*/
+.mytb label  {
+	background: rgba(17, 22, 32, 0.795);
+	
+	color: black;
+	border-color: #9bbde0;
+	box-shadow: none;
 }
 
 .donatebox {
@@ -63,10 +74,7 @@ th input {
 	background: linear-gradient(90deg, rgb(7, 106, 255) 0%, rgb(199, 225, 255) 100%);
 }
 
- fieldset.form-group  > *
-{
-	 margin-left: 1em;
-}
+
 
 
 /*   #refresh ,   */
