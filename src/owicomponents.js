@@ -32,7 +32,7 @@ function OptionExpiration(props) {
 	const underlyingPrice = Number(data && data.underlying.last)
 	let [pricePoints, setPricePoints] = useState(getDefaultPricePoints(underlyingPrice, type))
 	let [previousType, setPreviousType] = useState(type)
-	const preHeaders = ['', '', '', '', '', '', 'If Price Goes to']
+	const preHeaders = (type !== "straddle") ? ['', '', '', '', '', '', 'If Price Goes to'] : ['', '', '', '', '', '','', '', '', '', '', '', 'If Price Goes to']
 
 	if (!data) {
 		log("no data")
@@ -82,7 +82,7 @@ function OptionExpiration(props) {
 function OptionHeaderRow(props) {
 	const coreHeaders = ["Strike", "Bid", "Ask", "Last", "Price", "Breakeven"]
 	const straddleHeaders = ["Bid", "Ask", "Vol", "Breakeven", "Strike", "Bid", "Ask", "Price", "Bid", "Ask", "Vol", "Breakeven"]
-	const profitHeaders = ["Profit", "ROI", "Profit", "ROI", "Profit", "ROI", "Profit", "ROI", "Profit", "ROI", "Profit", "ROI"]
+	const profitHeaders = ["Profit", "ROI", "Profit", "ROI", "Profit", "ROI", "Profit", "ROI", "Profit", "ROI", "Profit", "ROI", "Profit", "ROI"]
 
 	const { type } = props
 	let corePart
@@ -91,7 +91,8 @@ function OptionHeaderRow(props) {
 		corePart = straddleHeaders.map(headerName => <th key={i++} className={(headerName === 'Strike') ? 'colborder' : (i === 8) ? 'sectionborder' : undefined}>{headerName}</th>)
 	else
 		corePart = coreHeaders.map(headerName => <th key={i++} className={(headerName === 'Strike') ? 'colborder' : undefined}>{headerName}</th>)
-	const profitsPart = profitHeaders.map(x => <th key={x + i++}>{x}</th>)
+	
+	const profitsPart = profitHeaders.map(x => <th key={x + i++} className={(x === 'Profit') ? 'leftborder' : undefined} >{x}</th>)
 	return (
 		<tr>{corePart}{profitsPart}</tr>
 	)
@@ -126,16 +127,14 @@ function PricePointsHeaderRow(props) {
 		let priceChange = parseLocaleNumber(pricePoint) / underlyingPrice - 1
 
 
-		ppPart.push(<th key={i++}>
+		ppPart.push(<th key={i++} className='leftborder'>
 			<input name={j} type="text" value={pricePoints[j]} onChange={onPricePointChange} className="pp" placeholder="Enter #" />
 		</th>)
 		j++
 		ppPart.push(<th key={i++}>({priceChange.toLocaleString(undefined, { style: "percent", maximumFractionDigits: 0 })} change)</th>)
 	}
 	return (
-		<tr>
-			{corePart}{ppPart}
-		</tr>
+		<tr>{corePart}{ppPart}</tr>
 	)
 }
 
@@ -268,7 +267,7 @@ function OptionRow(props) {
 	for (let pricePoint of pricePoints) {
 		let profit = getProfit(parseLocaleNumber(pricePoint), price, Number(strike), type, amBuying)
 		let roi = profit / price
-		profitsPart.push(<td key={`profit${i}`}> {currencyFormat(profit)}</td>)
+		profitsPart.push(<td key={`profit${i}`} className ='leftborder'> {currencyFormat(profit)}</td>)
 		profitsPart.push(<td key={`roi${i++}`}> {percentFormat(roi)}</td>)
 	}
 	return (
@@ -312,9 +311,9 @@ export function StockInfo(props) {
 	if (stockData.status !== 'SUCCESS')
 		info = <h2> no option data found</h2>
 
-	else	{
+	else	{  //stockData.underlying data is delayed ~15 minutes, the rest of stockData doesn't seem to be-<span>  {stockData.isDelayed ? ' (delayed)':'' } </span>
 		let underlying = stockData.underlying
-		info = <div><h2 style={{display:'inline'}}>{underlying.symbol} :{currencyFormat(underlying.last)} <span>  {stockData.isDelayed ? ' (delayed)':'' } </span></h2> <span> {' '}{underlying.description}</span></div>
+		info = <div><h2 style={{display:'inline'}}>{underlying.symbol} :{currencyFormat(stockData.underlyingPrice)} </h2> <span> {' '}{underlying.description}</span></div>
 	}
 	return (
 		<div>
