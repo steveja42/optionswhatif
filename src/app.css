@@ -37,6 +37,9 @@ table {
 .stocktable .sectionborder {
 	border-right: 1px solid black;
 }
+.stocktable .leftborder {
+	border-left: 1px solid black;
+}
 
 .stocktable .noborder {
 	border:none;

@@ -7,7 +7,7 @@ import Alert from 'react-bootstrap/Alert'
 import Form from 'react-bootstrap/Form'
 import Container from "react-bootstrap/Container"
 import * as td from './td'
-import {OptionExpirations, StockInfo } from './owicomponents'
+import {OptionExpirations, StockInfo} from './owicomponents'
 
 const log = console.log
 
