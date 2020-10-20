@@ -1,5 +1,5 @@
 
-A react.js website that is a stock option tool for investors and speculators that shows possible outcomes for the stock options you select.
+A react.js website that is a stock option tool for investors and speculators that calculates possible outcomes for the stock options you select.
 
 A working website can be found [here](https://optionswhatif.com/).
 
