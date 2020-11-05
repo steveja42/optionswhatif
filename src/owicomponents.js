@@ -88,7 +88,7 @@ function OptionHeaderRow(props) {
 	let corePart
 	let i = 0
 	if (type === "straddle")
-		corePart = straddleHeaders.map(headerName => <th key={i++} className={(headerName === 'Strike') ? 'colborder' : (i === 8) ? 'sectionborder' : undefined}>{headerName}</th>)
+		corePart = straddleHeaders.map(headerName => <th key={i++} className={(headerName === 'Strike') ? 'colborder' : (i === 7) ? 'sectionborder' : undefined}>{headerName}</th>)
 	else
 		corePart = coreHeaders.map(headerName => <th key={i++} className={(headerName === 'Strike') ? 'colborder' : undefined}>{headerName}</th>)
 	
@@ -111,9 +111,9 @@ function PricePointsHeaderRow(props) {
 	let i = 0
 	let corePart
 	if (type === "straddle")
-		corePart = ppStraddleHeaders.map(x => <th key={i++} className={(i === 8) ? 'sectionborder' : (i === 5) ? 'colborder' : undefined}>{x}</th>)
+		corePart = ppStraddleHeaders.map(x => <th key={i++} className={(i === 7) ? 'sectionborder' : (i === 4) ? 'colborder' : undefined}>{x}</th>)
 	else
-		corePart = ppSingleHeaders.map(x => <th key={i++} className={(i === 1) ? 'colborder' : undefined}>{x}</th>)
+		corePart = ppSingleHeaders.map(x => <th key={i++} className={(i === 0) ? 'colborder' : undefined}>{x}</th>)
 
 	let ppPart = []
 	//let priceChangeMessage = 'If Price Goes To'
