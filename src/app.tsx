@@ -29,7 +29,7 @@ if (googleAnalyticsTrackingID) {
   ReactGA.initialize(googleAnalyticsTrackingID);   // Add your tracking ID created from https://analytics.google.com/analytics/web/#home/
 }
 
-function setPageview(url) {
+function setPageview(url:string) {
   log(url)
   ReactGA.pageview(url)
 }

@@ -5,7 +5,7 @@ const tdRedirectUrl = ``
 
 //see https://developer.tdameritrade.com/option-chains/apis/get/marketdata/chains for more info
 
-export async function getOptionChain(symbol, contractType = 'ALL', strikeCount = 0) {
+export async function getOptionChain(symbol:string, contractType = 'ALL', strikeCount = 0) {
 	let strikeCountString = (strikeCount>0)? `&strikeCount=${strikeCount}`: ''
 	var url = `https://api.tdameritrade.com/v1/marketdata/chains?symbol=${symbol}&contractType=${contractType}&includeQuotes=TRUE${strikeCountString}`
 	return callTD(url);
@@ -18,8 +18,10 @@ export async function getOptionChain(symbol, contractType = 'ALL', strikeCount =
  * @param {object} tokens the oauth tokens
  * @return [response in JSON(null if error), error object]
  */
-async function callTD(url, tokens) {
-	let accessToken = tokens && tokens.access_token
+async function callTD(url:string, tokens:any= null) {
+	let accessToken = tokens?.access_token
+	if (!tdClientId)
+		throw new Error(`don't have tdClientID in callTD`)
 	url += `&apikey=${encodeURIComponent(tdClientId)}`;
 
 
@@ -51,7 +53,7 @@ async function callTD(url, tokens) {
  *
  * @return response or throws error
  */
-async function makeRequest(token, url) {
+async function makeRequest(token:any, url:string) {
 
 	let options = token &&
 	{
@@ -80,8 +82,10 @@ async function makeRequest(token, url) {
  *
  * @return access token,or null for failure
  */
-async function refreshTheToken2(refreshToken) {
-	var url = 'https://api.tdameritrade.com/v1/oauth2/token';
+async function refreshTheToken2(refreshToken:any) {
+	var url = 'https://api.tdameritrade.com/v1/oauth2/token'
+	if (!tdClientId)
+		throw new Error(`don't have tdClientID in refreshTheToken2`)
 	var params = {
 		body: 'grant_type=refresh_token&refresh_token=' + encodeURIComponent(refreshToken) + '&access_type=offline&client_id=' + encodeURIComponent(tdClientId) + '&redirect_uri=' + encodeURIComponent(tdRedirectUrl),
 		headers: { "Content-Type": "application/x-www-form-urlencoded", },

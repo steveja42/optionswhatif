@@ -6,6 +6,12 @@ import {post} from './network'
 
 let sitekey = process.env.REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY
 
+declare global {
+	interface Window {
+		grecaptcha:any;
+	}
+}
+type GenericElement = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement
 
 export class FeedbackForm extends React.Component {
 	state = {
@@ -21,21 +27,19 @@ export class FeedbackForm extends React.Component {
 	componentDidMount() {
 		setTimeout(() => {
 			window.grecaptcha.render('recaptcha', {
-				sitekey: sitekey,
-				callback: function (resp) { }
+				sitekey: sitekey
 			});
 		}, 300);
 	}
 
-
-	handleChange = (event) => {
+	handleChange: React.ChangeEventHandler<GenericElement  > = (event) => {  //: React.FormEvent<HTMLInputElement>
 		const target = event.target;
-		const value = target.type === 'checkbox' ? target.checked : target.value;
+		const value = target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value;
 		this.setState({ [target.name]: value });
 		this.setState({ showSuccess: false })
 	}
 
-	handleSubmit = async (event) => {
+	handleSubmit = async (event: React.SyntheticEvent) => {
 		const grecaptchaResponse = window.grecaptcha.getResponse()
 		console.log(`"handling form" ${grecaptchaResponse.length} `)
 		event.preventDefault();
@@ -81,7 +85,7 @@ export class FeedbackForm extends React.Component {
 				<div className="form-group" >
 					<label >
 						Type of feedback
-				<select name="type" value={this.state.type} onChange={this.handleChange} className="form-control  custom-select">
+				<select name="type" value={this.state.type} onChange ={this.handleChange  } className="form-control  custom-select">
 							<option value="bug report">Bug report</option>
 							<option value="feature request">Feature request</option>
 							<option value="testimonial">Testimonial</option>
@@ -104,7 +108,7 @@ export class FeedbackForm extends React.Component {
 				<div className="form-group">
 					<label>
 						Feedback:
-				<textarea name="feedback" value={this.state.feedback} onChange={this.handleChange} className="form-control" rows="3" placeholder="Enter feedback" required />
+				<textarea name="feedback" value={this.state.feedback} onChange={this.handleChange} className="form-control" rows={3} placeholder="Enter feedback" required />
 					</label>
 				</div>
 				<div id="recaptcha" className=" form-group" data-sitekey={sitekey}></div>
@@ -126,9 +130,9 @@ export function Donate() {
 				<input type="hidden" name="business" value="W8CNL6D983WVS" />
 				<input type="hidden" name="currency_code" value="USD" />
 				<div className="form-group" >
-					<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+					<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"  name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
 				</div>
-				<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+				<img alt="" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
 			</form>
 		</div>
 	)

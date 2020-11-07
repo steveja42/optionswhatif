@@ -6,7 +6,7 @@ const server = (window.location.hostname === "localhost") ? 'http://localhost:80
 	 * @param {string} route the url .
 	 * @return [response in JSON(null if error), error object]
 	 */
-	export async function get(route) {
+	export async function get(route:string) {
 		
 		try {
 			const rawResponse = await fetch(`${server}/${route}`);
@@ -25,7 +25,7 @@ const server = (window.location.hostname === "localhost") ? 'http://localhost:80
 	 * @param {string} data json to be posted .
 	 * @return [response in JSON(null if error), error object]
 	 */
-	export async function post(data) {
+	export async function post(data:object) {
 	
 			try {
 				const response = await fetch(`${server}/feedback`, { 

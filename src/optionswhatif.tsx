@@ -7,27 +7,46 @@ import Alert from 'react-bootstrap/Alert'
 import Form from 'react-bootstrap/Form'
 import Container from "react-bootstrap/Container"
 import * as td from './td'
-import {OptionExpirations, StockInfo} from './owicomponents'
+import { OptionExpirations, StockInfo,OptionChainFromTD, OptionTypes, BuySell, Strategy, ComboType  } from './owicomponents'
 
 const log = console.log
 
+interface Props {
+
+}
+interface State {
+	type: OptionTypes,
+	buySell: BuySell,
+	symbol: string,
+	strategy: Strategy,
+	dateOptions?: any,
+	datesSelected: string[],
+	data?: OptionChainFromTD,
+	optionMap?: any,
+	showSuccess: boolean,
+	showFailure?: string,
+	strikeCount: number,
+}
+type GenericElement = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement
+
 //see https://developer.tdameritrade.com/option-chains/apis/get/marketdata/chains for more info
-export class OptionsWhatIf extends React.Component {
+export class OptionsWhatIf extends React.Component<Props, State>  {
 	state = {
-		type: 'PUT',
-		buySell: 'BUY',
+		type: OptionTypes.Put,
+		buySell: BuySell.Buy,
 		symbol: '',
-		strategy: 'single',
+		strategy: Strategy.single,
 		dateOptions: null,
 		datesSelected: [],
 		data: null,
 		optionMap: null,
 		showSuccess: false,
-		showFailure: false,
+		showFailure: undefined,
 		strikeCount: 5,
 	};
 	fetching = false
 	dataError = false
+	timerID = 0
 	componentDidMount() {
 
 	}
@@ -45,10 +64,10 @@ export class OptionsWhatIf extends React.Component {
 		this.refreshExpirations()
 	}
 
-	symbolChanged = async (event) => {
+	symbolChanged = async () => {
 		this.changeSymbol()
 	}
-	handleKeyPress = (event) => {
+	handleKeyPress = (event:React.KeyboardEvent) => {
 		if (event.key === 'Enter') {
 			console.log('enter press here! ')
 			this.changeSymbol()
@@ -60,10 +79,10 @@ export class OptionsWhatIf extends React.Component {
 	 *
 	 * @param event
 	 */
-	optionTypeChanged = (event) => {
-		const target = event.target
-		this.setState({ type: target.value })
-		this.setExpirationDates(this.state.data, target.value)
+	optionTypeChanged:React.ChangeEventHandler<GenericElement> = (event) => {
+		const type = event.target.value as OptionTypes
+		this.setState({ type:type })
+		this.setExpirationDates(this.state.data, type)
 		this.refreshExpirations()
 	}
 	/**
@@ -71,7 +90,7 @@ export class OptionsWhatIf extends React.Component {
 	 *
 	 * @param event
 	 */
-	autoRefreshChanged = (event) => {
+	autoRefreshChanged:React.ChangeEventHandler<HTMLInputElement> = (event) => {
 		if (event.target.checked) {
 			this.timerID = setInterval(this.getData, 1000)
 		}
@@ -81,19 +100,21 @@ export class OptionsWhatIf extends React.Component {
 		}
 	}
 
-	handleChange = (event) => {
+	handleChange:React.ChangeEventHandler<GenericElement> = (event) => {
 		const target = event.target;
-		const value = target.type === 'checkbox' ? target.checked : target.value;
-		this.setState({ [target.name]: value });
+		const value = target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value;
+		this.setState({...this.state, [target.name]: value });
+		//this.setState({[target.name]: value as string} as Partial<State> );  
+		//this.setState({[target.name]: value } as Pick<State, keyof State> );  
 		if (target.name === 'strikeCount' && this.state.symbol)
-			this.getData(this.state.symbol, value)
+			this.getData(this.state.symbol, value as unknown as number)
 		if (target.name === 'strategy' && this.state.symbol)
 			this.refreshExpirations()
 
 		//	this.setExpirationDates(this.state.data, value)
 	}
 
-	datesChanged = (event) => {
+	datesChanged:React.ChangeEventHandler<HTMLSelectElement> = (event) => {
 		const datesSelected = Array.from(event.target.selectedOptions, option => option.value);
 		log(event.target.value)
 		this.setState({ datesSelected });
@@ -108,11 +129,11 @@ export class OptionsWhatIf extends React.Component {
 	}
 
 
-	handleSubmit = async (event) => {
+	handleSubmit = async (event: React.SyntheticEvent) => {
 
 		event.preventDefault();
 	}
-	refreshData = async (event) => {
+	refreshData = async (event: React.SyntheticEvent) => {
 
 		event.preventDefault()
 		this.getData()
@@ -123,7 +144,7 @@ export class OptionsWhatIf extends React.Component {
 	 * @param event
 	 */
 
-	setExpirationDates(data, type = this.state.type) {
+	setExpirationDates(data:OptionChainFromTD, type = this.state.type) {
 		let dateOptions = null
 		if (!data)
 			return
@@ -144,7 +165,7 @@ export class OptionsWhatIf extends React.Component {
 		if (result) {
 			if (this.areNoWrongExpirationDates(result)) {
 				this.setState({ data: result })
-				this.setState({ showFailure: false })
+				this.setState({ showFailure: undefined })
 			}
 			else
 				this.setState({ showFailure: "got back invalid option date, please try again" })
@@ -159,11 +180,11 @@ export class OptionsWhatIf extends React.Component {
 		}
 	}
 	//sometimes TD sends us wrong expiration dates, so check for that
-	areNoWrongExpirationDates(data) {
-		if ((data.status === 'SUCCESS') && this.state.datesSelected) {
+	areNoWrongExpirationDates(data:OptionChainFromTD) {
+		if ((data?.status === 'SUCCESS') && this.state.datesSelected) {
 			const optionMap = data.putExpDateMap // (this.state.type === "PUT") ? dataToCheck.putExpDateMap : dataToCheck.callExpDateMap;
 			for (let date of this.state.datesSelected) {
-				if (!optionMap[date]) {
+				if (!optionMap?.[date]) {
 					log(`data error: expiration ${date} not in ${JSON.stringify(optionMap).slice(0, 12)}...`)
 					return false
 				}
@@ -175,7 +196,7 @@ export class OptionsWhatIf extends React.Component {
 
 	//alert(`${this.state.type} feedback was submitted: ${this.state.name} ${this.state.email} ${this.state.feedback}`);
 
-	componentDidCatch(error, errorInfo) {
+	componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
 		// You can also log the error to an error reporting service
 		log(error)
 		log(errorInfo)
@@ -190,7 +211,7 @@ export class OptionsWhatIf extends React.Component {
 						<Alert show={this.state.showSuccess} variant="success" onClose={() => this.setState({ showSuccess: false })} dismissible>
 							<Alert.Heading>Thank You! The {this.state.type} was submitted.</Alert.Heading>
 						</Alert>
-						<Alert show={this.state.showFailure} variant="danger" onClose={() => this.setState({ showFailure: false })} dismissible>
+						<Alert show={this.state.showFailure  !== undefined} variant="danger" onClose={() => this.setState({ showFailure: undefined })} dismissible>
 							<Alert.Heading>Server error. {this.state.showFailure}</Alert.Heading>
 						</Alert>
 
@@ -206,20 +227,20 @@ export class OptionsWhatIf extends React.Component {
 							</Form.Control>
 						</Form.Group>
 
-					   <ButtonGroup as="fieldset" toggle vertical className="mytb" disabled={this.state.strategy !== 'single'}>
-							<ToggleButton type='radio' variant="light" id='PUT' value='PUT' label='Put' checked={(this.state.type === 'PUT')} disabled={this.state.strategy !== 'single'} onChange={this.optionTypeChanged}>Put
+						<ButtonGroup as="fieldset" toggle vertical className="mytb" disabled={this.state.strategy !== Strategy.single}>
+							<ToggleButton type='radio' variant="light" id='PUT' value='PUT' checked={(this.state.type === OptionTypes.Put)} disabled={this.state.strategy !== Strategy.single} onChange={this.optionTypeChanged}>Put
 							</ToggleButton>
-							<ToggleButton type='radio' variant="light" id='CALL' value='CALL' label='Call' checked={(this.state.type === 'CALL')} disabled={this.state.strategy !== 'single'} onChange={this.optionTypeChanged}>Call
+							<ToggleButton type='radio' variant="light" id='CALL' value='CALL' checked={(this.state.type === OptionTypes.Call)} disabled={this.state.strategy !== Strategy.single} onChange={this.optionTypeChanged}>Call
 							</ToggleButton>
 						</ButtonGroup>
 
-					   <ButtonGroup toggle vertical className="mytb  " disabled={this.state.strategy !== 'single'}>
-							<ToggleButton type='radio' variant="light" name="buySell" id='BUY' value='BUY' label='Buy' checked={(this.state.buySell === 'BUY')} disabled={this.state.strategy !== 'single'} onChange={this.handleChange}>Buy
+						<ButtonGroup as="fieldset" toggle vertical className="mytb  " disabled={this.state.strategy !== Strategy.single}>
+							<ToggleButton type='radio' variant="light" name="buySell" id='BUY' value='BUY' checked={(this.state.buySell === BuySell.Buy)} disabled={this.state.strategy !== Strategy.single} onChange={this.handleChange}>Buy
 							</ToggleButton>
-							<ToggleButton type='radio' variant="light" name="buySell" id='SELL' value='SELL' label='Sell' checked={(this.state.buySell === 'SELL')} disabled={this.state.strategy !== 'single'} onChange={this.handleChange}>Sell
+							<ToggleButton type='radio' variant="light" name="buySell" id='SELL' value='SELL' checked={(this.state.buySell === BuySell.Sell)} disabled={this.state.strategy !== Strategy.single} onChange={this.handleChange}>Sell
 							</ToggleButton>
 						</ButtonGroup>
-						
+
 						<Form.Group controlId="strikeCount" >
 							<label>Strikes</label>
 							<Form.Control as="select" name="strikeCount" onChange={this.handleChange} value={this.state.strikeCount}>
@@ -249,8 +270,11 @@ export class OptionsWhatIf extends React.Component {
 				</Container>
 				<Container fluid>
 					<StockInfo data={this.state.data ? this.state.data : null} />
-					{!this.dataError && this.state.data && this.state.data.status === 'SUCCESS' &&
-						<OptionExpirations data={this.state.data} dates={this.state.datesSelected} type={this.state.strategy === 'single' ? this.state.type : this.state.strategy} amBuying={this.state.buySell === "BUY"} />
+					
+					  {/* 
+  // @ts-ignore */}
+					{!this.dataError && this.state?.data?.status === 'SUCCESS' &&
+						<OptionExpirations data={this.state.data} dates={this.state.datesSelected} type={this.state.strategy === Strategy.single ? this.state.type as unknown as ComboType: this.state.strategy  as unknown as ComboType} amBuying={this.state.buySell === "BUY"} />
 					}
 
 				</Container>

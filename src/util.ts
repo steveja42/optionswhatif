@@ -1,4 +1,4 @@
-export function objectsAreEqual(a, b) {
+export function objectsAreEqual(a:any, b:any) {
 	for (var prop in a) {
 	  if (a.hasOwnProperty(prop)) {
 		 if (b.hasOwnProperty(prop)) {
