@@ -1,9 +1,9 @@
 
-A react.js website that is a stock option tool for investors and speculators that calculates possible outcomes for the stock options you select.
+A react.js (typescript) website that is a stock option tool for investors and speculators that calculates possible outcomes for the stock options you select.
 
 A working website can be found [here](https://optionswhatif.com/).
 
-To run your own build you need to have a TD Ameritrade Developer Account, see https://developer.tdameritrade.com,  and place the following in a ".env" file in the root of your project
+To run your own build you need to have a TD Ameritrade Developer Account, see https://developer.tdameritrade.com,  and place the following in a file named ".env" in the root of your project
 ### `REACT_APP_TD_CLIENT_ID=<your consumer key>@AMER.OAUTHAP`
 
 
