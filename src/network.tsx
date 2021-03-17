@@ -1,4 +1,4 @@
-const server = (window.location.hostname === "localhost") ? 'http://localhost:8080' : 'https://www.resultlab.live'
+const server = (window.location.hostname === "localhost") ? 'http://localhost:8080' : 'https://www.resultify.live'
 
 /**
 	 * Performs http get request from our node.js server
