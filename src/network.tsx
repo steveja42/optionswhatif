@@ -1,4 +1,4 @@
-const server = (window.location.hostname === "localhost") ? 'http://localhost:8080' : 'https://resultify.live'
+const server = (window.location.hostname === "localhost") ? 'http://localhost:8080' : 'https://sj-td.herokuapp.com'  //https://resultify.live'
 //const server =  'https://resultify.live'
 
 /**
