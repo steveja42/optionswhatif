@@ -26,3 +26,5 @@ yarn-error.log*
 pnpm-lock.yaml
 info/scratch.txt
 yarn.lock
+# Local Netlify folder
+.netlify
