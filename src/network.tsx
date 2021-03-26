@@ -24,12 +24,13 @@ const server = (window.location.hostname === "localhost") ? 'http://localhost:80
 	 * Performs http post request to our node.js server
 	 *
 	 * @param {string} data json to be posted .
+	 * @param {string} route route to use.
 	 * @return [response in JSON(null if error), error object]
 	 */
-	export async function post(data:object) {
+	export async function post(data:object, route='feedback') {
 	
 			try {
-				const response = await fetch(`${server}/feedback`, { 
+				const response = await fetch(`${server}/${route}`, { 
 					method: 'POST',
 					body: JSON.stringify(data),
 					headers: {

@@ -2,13 +2,14 @@ import React from 'react';
 import Button from "react-bootstrap/Button";
 import Alert from 'react-bootstrap/Alert'
 import Form from 'react-bootstrap/Form'
-import {post} from './network'
+import Spinner from 'react-bootstrap/Spinner'
+import { post } from './network'
 
 let sitekey = process.env.REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY
 
 declare global {
 	interface Window {
-		grecaptcha:any;
+		grecaptcha: any;
 	}
 }
 type GenericElement = HTMLSelectElement | HTMLInputElement | HTMLTextAreaElement
@@ -21,6 +22,7 @@ export class FeedbackForm extends React.Component {
 		feedback: '',
 		showSuccess: false,
 		showFailure: false,
+		isLoading: false,
 	};
 
 
@@ -30,9 +32,10 @@ export class FeedbackForm extends React.Component {
 				sitekey: sitekey
 			});
 		}, 300);
+		post({ ping: "ping" }, 'init')   //ping the server that will process the feedback, in case it needs to be woken up or started
 	}
 
-	handleChange: React.ChangeEventHandler<GenericElement  > = (event) => {  //: React.FormEvent<HTMLInputElement>
+	handleChange: React.ChangeEventHandler<GenericElement> = (event) => {  //: React.FormEvent<HTMLInputElement>
 		const target = event.target;
 		const value = target.type === 'checkbox' ? (target as HTMLInputElement).checked : target.value;
 		this.setState({ [target.name]: value });
@@ -43,10 +46,13 @@ export class FeedbackForm extends React.Component {
 		const grecaptchaResponse = window.grecaptcha.getResponse()
 		console.log(`"handling form" ${grecaptchaResponse.length} `)
 		event.preventDefault();
-		if (grecaptchaResponse.length === 0) {
-			alert(`reCAPTCHA must be completed`)
-			return
-		}
+		/*		if (grecaptchaResponse.length === 0) {
+					alert(`reCAPTCHA must be completed`)
+					return
+				}
+		
+		*/
+		this.setState({ isLoading: true })
 		let data = {
 			source: 'optionsWhatIf',
 			type: this.state.type,
@@ -55,20 +61,20 @@ export class FeedbackForm extends React.Component {
 			feedback: this.state.feedback,
 			grecaptchaResponse,
 		}
-		let [responseOk,error] = await post(data)
-		if (responseOk)
-		{
+		let [responseOk, error] = await post(data)
+		this.setState({ isLoading: false })
+
+		if (responseOk) {
 			this.setState({ showFailure: false })
 			this.setState({ showSuccess: true })
 		}
-		else
-		{
+		else {
 			this.setState({ showFailure: error.toString() })
 			this.setState({ showSuccess: false })
 		}
 
 		//alert(`${this.state.type} feedback was submitted: ${this.state.name} ${this.state.email} ${this.state.feedback}`);
-//Sorry, server error. Please notify dev@resultify.live
+		//Sorry, server error. Please notify dev@resultify.live
 	}
 	//onSubmit={this.handleSubmit}  action="http://localhost:8080/feedback" method="post"   action="http://localhost:8081/process_post" method="post"
 	render() {
@@ -85,7 +91,7 @@ export class FeedbackForm extends React.Component {
 				<div className="form-group" >
 					<label >
 						Type of feedback
-				<select name="type" value={this.state.type} onChange ={this.handleChange  } className="form-control  custom-select">
+				<select name="type" value={this.state.type} onChange={this.handleChange} className="form-control  custom-select">
 							<option value="bug report">Bug report</option>
 							<option value="feature request">Feature request</option>
 							<option value="testimonial">Testimonial</option>
@@ -100,7 +106,7 @@ export class FeedbackForm extends React.Component {
 
 				<div className="form-group">
 					<label htmlFor="exampleInputEmail1">Email address
-		<input name="email" value={this.state.email} onChange={this.handleChange} type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required />
+		<input name="email" type="email" value={this.state.email} onChange={this.handleChange} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required />
 					</label>
 					<small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
 				</div>
@@ -113,7 +119,12 @@ export class FeedbackForm extends React.Component {
 				</div>
 				<div id="recaptcha" className=" form-group" data-sitekey={sitekey}></div>
 
-				<Button type="submit" value="Submit"> Submit</Button>
+				<Button type="submit" value="Submit" disabled={this.state.isLoading} >
+					Submit
+				{this.state.isLoading && <Spinner animation="border" role="status " size="sm">
+						<span className="sr-only">Loading...</span>
+					</Spinner>}
+				</Button>
 				<p />
 			</Form>
 
@@ -130,7 +141,7 @@ export function Donate() {
 				<input type="hidden" name="business" value="W8CNL6D983WVS" />
 				<input type="hidden" name="currency_code" value="USD" />
 				<div className="form-group" >
-					<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"  name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+					<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
 				</div>
 				<img alt="" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
 			</form>
