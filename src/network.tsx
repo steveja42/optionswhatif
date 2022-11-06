@@ -1,5 +1,5 @@
 // const server = (window.location.hostname === "localhost") ? 'http://localhost:8080' : 'https://tdnode.onrender.com' //'https://sj-td.herokuapp.com'  //https://resultify.live'
-const server =  'https://tdnode.onrender.com'
+const server = 'https://tdnode.onrender.com'
 
 /**
 	 * Performs http get request from our node.js server
@@ -7,46 +7,46 @@ const server =  'https://tdnode.onrender.com'
 	 * @param {string} route the url .
 	 * @return [response in JSON(null if error), error object]
 	 */
-	export async function get(route:string) {
-		
-		try {
-			const rawResponse = await fetch(`${server}/${route}`);
-			const json = await rawResponse.json()
-			return [json]
-		}
-		catch (error) {
-			console.error(`get: error occurred ${error}`);
-			return [null, error]
-		}
-	}
+export async function get(route: string) {
 
-	/**
-	 * Performs http post request to our node.js server
-	 *
-	 * @param {string} data json to be posted .
-	 * @param {string} route route to use.
-	 * @return [response in JSON(null if error), error object]
-	 */
-	export async function post(data:Record<string,unknown>, route='feedback') {
-	
-			try {
-				const response = await fetch(`${server}/${route}`, { 
-					method: 'POST',
-					body: JSON.stringify(data),
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-	
-				});
-				if (response.ok)
-					return [true];
-				let text = await response.text()	
-				return [false, `error: status ${response.status} ${response.statusText} ${text}`]
-			}
+	try {
+		const rawResponse = await fetch(`${server}/${route}`);
+		const json = await rawResponse.json()
+		return [json]
+	}
+	catch (error) {
+		console.error(`get: error occurred ${error}`);
+		return [null, error]
+	}
+}
+
+/**
+ * Performs http post request to our node.js server
+ *
+ * @param {string} data json to be posted .
+ * @param {string} route route to use.
+ * @return [response in JSON(null if error), error object]
+ */
+export async function post(data: Record<string, unknown>, route = 'feedback'): Promise<[boolean, string]> {
+
+	try {
+		const response = await fetch(`${server}/${route}`, {
+			method: 'POST',
+			body: JSON.stringify(data),
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			},
+
+		});
+		if (response.ok)
+			return [true, ""];
+	let text = await response.text()
+	return [false, `error: status ${response.status} ${response.statusText} ${text}`]
+}
 		
-		catch (error) {
-			console.error(`post: error occurred with fetch ${error}`);
-			return [false, error]
-		}
+		catch (error:any) {
+	console.error(`post: error occurred with fetch ${error}`);
+	return [false, error.toString()]
+}
 	}
