@@ -1,5 +1,5 @@
-const server = (window.location.hostname === "localhost") ? 'http://localhost:8080' : 'https://sj-td.herokuapp.com'  //https://resultify.live'
-//const server =  'https://resultify.live'
+// const server = (window.location.hostname === "localhost") ? 'http://localhost:8080' : 'https://tdnode.onrender.com' //'https://sj-td.herokuapp.com'  //https://resultify.live'
+const server =  'https://tdnode.onrender.com'
 
 /**
 	 * Performs http get request from our node.js server
@@ -27,7 +27,7 @@ const server = (window.location.hostname === "localhost") ? 'http://localhost:80
 	 * @param {string} route route to use.
 	 * @return [response in JSON(null if error), error object]
 	 */
-	export async function post(data:object, route='feedback') {
+	export async function post(data:Record<string,unknown>, route='feedback') {
 	
 			try {
 				const response = await fetch(`${server}/${route}`, { 
