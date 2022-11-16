@@ -1,6 +1,7 @@
 
 import ReactGA from 'react-ga'; // https://github.com/react-ga/react-ga
 import React, { useEffect } from 'react';
+import { trackPage } from './util'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
@@ -31,6 +32,7 @@ if (googleAnalyticsTrackingID) {
 
 function setPageview(url:string) {
   log(url)
+  trackPage(url)
   ReactGA.pageview(url)
 }
 
