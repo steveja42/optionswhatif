@@ -1,4 +1,4 @@
-import { log } from './util'
+//import { log } from './util'
 
 import Cryptr from 'cryptr';
 const cryptr = new Cryptr(process.env.KEY42 || "foo");
