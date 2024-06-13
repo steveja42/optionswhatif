@@ -1,5 +1,5 @@
 import { log, debugging } from './util'
-import * as network from './network'
+import * as server from './network'
 import { OptionChainFromTD } from './owicomponents'
 
 var currentTokens: AuthTokens;
@@ -11,7 +11,7 @@ interface AuthTokens {
 
 const encodedClientIDAndSecret = process.env.REACT_APP_SCHWABENCODEDCLIENTIDANDSECRET
 const schwabClientID = process.env.REACT_APP_SCHWABCLIENTID
-let redirectUrl = network.server + '/tdsjsj'
+let redirectUrl = server.server + '/tdsjsj'
 const schwabUrlToRequestAuthorizationCode = `https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${schwabClientID}&redirect_uri=${redirectUrl}`;
 export const authNeeded = "auth needed";
 export const authNeededObj = { authStatus: "authNeeded", authUrl: schwabUrlToRequestAuthorizationCode };
@@ -42,7 +42,7 @@ function shortenToken(token: string): string {
  */
 async function getCurrentTokens(): Promise<AuthTokens> {
 	if (!currentTokens?.access_token)
-		[currentTokens] = await network.get('getcurrenttokens') as [AuthTokens, unknown]
+		[currentTokens] = await server.get('getcurrenttokens') as [AuthTokens, unknown]
 	if (!currentTokens)
 		return { access_token: "", refresh_token: "" }
 	return currentTokens
@@ -53,10 +53,10 @@ async function getCurrentTokens(): Promise<AuthTokens> {
  * @returns AuthTokens
  */
 async function getNewTokens(): Promise<AuthTokens> {
-	//open Schwab URL in browser for user to loging and provide authorization
-	window.open(schwabUrlToRequestAuthorizationCode, "_blank");
+	if (!debugging)  //schwab api doesn't work in debug window
+		window.open(schwabUrlToRequestAuthorizationCode, "_blank");  //open Schwab URL in browser for user to loging and provide authorization
 
-	[currentTokens] = await network.get(`getnewtokens?shouldOpenBrowser=${debugging}`) as [AuthTokens, unknown]
+	[currentTokens] = await server.get(`getnewtokens?shouldOpenBrowser=${debugging}`) as [AuthTokens, unknown]
 	if (currentTokens)
 		log(`got new Authorization- refreshToken:${shortenToken(currentTokens.refresh_token)} accessToken:${shortenToken(currentTokens.access_token)}`);
 	else

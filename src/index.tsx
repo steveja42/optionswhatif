@@ -5,7 +5,11 @@ import App from './app';
 //import App from './app-old-tabbed';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from "react-router-dom"
+import * as server from './network'
+
 //basename='/optionswhatif/'
+server.post({ ping: "ping" }, 'init')   //ping the server that will provide oauth for the Schwab API, in case it needs to be woken up or started
+
 ReactDOM.render(
 	<BrowserRouter > 
 	  <App />
