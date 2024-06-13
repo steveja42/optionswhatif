@@ -1,6 +1,5 @@
 import { post } from './network'
 export const debugging = true
-export const runningLocally = window.location.hostname === "localhost"
 
 export function objectsAreEqual(a:any, b:any) {
 	for (var prop in a) {
