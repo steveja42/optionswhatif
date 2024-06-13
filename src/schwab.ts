@@ -1,6 +1,6 @@
+import { log, debugging } from './util'
 import * as network from './network'
 import { OptionChainFromTD } from './owicomponents'
-import { log, debugging } from './util'
 
 var currentTokens: AuthTokens;
 

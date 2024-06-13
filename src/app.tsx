@@ -12,7 +12,6 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Image from 'react-bootstrap/Image'
 import { FeedbackForm, Donate } from './feedback'
-import { OptionPrices } from './optionprices'
 import { OptionsWhatIf } from './optionswhatif'
 import sheetsAddOnScreenshot from './sheetsaddonscreenshot.png'
 import webAppScreenshot from './webappscreenshot.png'
@@ -79,9 +78,6 @@ function App() {
             <Col sm='auto' className=" rounded donatebox">  <Donate /></Col>
           </Row>
         </Container>
-      </Route>
-      <Route path="/optionprices">
-        <OptionPrices />
       </Route>
       <Route path="/">
         <OptionsWhatIf />
