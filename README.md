@@ -3,8 +3,9 @@ A react.js (typescript) website that is a stock option tool for investors and sp
 
 A working website can be found [here](https://optionswhatif.com/).
 
-To run your own build you need to have a TD Ameritrade Developer Account, see https://developer.tdameritrade.com,  and place the following in a file named ".env" in the root of your project
-### `REACT_APP_TD_CLIENT_ID=<your consumer key>@AMER.OAUTHAP`
+To run your own build you need to have a Schwab Developer Account, see https://developer.schwab.com/,  and place the following in a file named ".env" in the root of your project
+### `REACT_APP_SCHWABCLIENTID=<your Schwab App key>`
+### `REACT_APP_SCHWABENCODEDCLIENTIDANDSECRET=<BASE64_ENCODED_Client_ID:Client_Secret>`
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

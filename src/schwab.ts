@@ -18,7 +18,7 @@ export const authNeededObj = { authStatus: "authNeeded", authUrl: schwabUrlToReq
 
 const schwabMarketDataUrl = 'https://api.schwabapi.com/marketdata/v1'
 
-//see https://developer.tdameritrade.com/option-chains/apis/get/marketdata/chains for more info
+//see https://developer.schwab.com/products/trader-api--individual/details/specifications/Market%20Data%20Production for more info
 
 export async function getOptionChain(symbol: string, contractType = 'ALL', strikeCount = 0): Promise<[OptionChainFromTD | null, Error | null]> {
 	let strikeCountString = (strikeCount > 0) ? `&strikeCount=${strikeCount}` : ''
