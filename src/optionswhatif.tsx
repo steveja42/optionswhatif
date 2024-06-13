@@ -6,11 +6,10 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import Alert from 'react-bootstrap/Alert'
 import Form from 'react-bootstrap/Form'
 import Container from "react-bootstrap/Container"
-import * as td from './td'
-import { OptionExpirations, StockInfo,OptionChainFromTD, OptionTypes, BuySell, Strategy, ComboType  } from './owicomponents'
+import * as schwab from './schwab'
+import { OptionExpirations, StockInfo,OptionChainFromTDN, OptionTypes, BuySell, Strategy, ComboType  } from './owicomponents'
 
 const log = console.log
-
 interface Props {
 
 }
@@ -21,7 +20,7 @@ interface State {
 	strategy: Strategy,
 	dateOptions?: any,
 	datesSelected: string[],
-	data?: OptionChainFromTD,
+	data?: OptionChainFromTDN,
 	optionMap?: any,
 	showSuccess: boolean,
 	showFailure?: string,
@@ -139,12 +138,11 @@ export class OptionsWhatIf extends React.Component<Props, State>  {
 		this.getData()
 	}
 	/**
-	 *  sets the expiration dates that are displayed
+	 *  sets the expiration dates displayed in combo box
 	 *
 	 * @param event
 	 */
-
-	setExpirationDates(data:OptionChainFromTD, type = this.state.type) {
+setExpirationDates(data:OptionChainFromTDN, type = this.state.type) {
 		let dateOptions = null
 		if (!data)
 			return
@@ -160,7 +158,7 @@ export class OptionsWhatIf extends React.Component<Props, State>  {
 			return
 		this.fetching = true
 		//let route = `optchain?symbol=${symbol.toUpperCase()}`
-		let [result, error] = await td.getOptionChain(symbol.toUpperCase(), undefined, strikeCount) //get(route)
+		let [result, error] = await schwab.getOptionChain(symbol.toUpperCase(), undefined, strikeCount) 
 		this.fetching = false
 		if (result) {
 			if (this.areNoWrongExpirationDates(result)) {
@@ -175,12 +173,12 @@ export class OptionsWhatIf extends React.Component<Props, State>  {
 		}
 
 		else {
-			this.setState({ showFailure: error.toString() })
+			this.setState({ showFailure: error?.toString() })
 			return null
 		}
 	}
 	//sometimes TD sends us wrong expiration dates, so check for that
-	areNoWrongExpirationDates(data:OptionChainFromTD) {
+	areNoWrongExpirationDates(data:OptionChainFromTDN) {
 		if ((data?.status === 'SUCCESS') && this.state.datesSelected) {
 			const optionMap = data.putExpDateMap // (this.state.type === "PUT") ? dataToCheck.putExpDateMap : dataToCheck.callExpDateMap;
 			for (let date of this.state.datesSelected) {

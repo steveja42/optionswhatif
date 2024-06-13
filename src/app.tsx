@@ -62,7 +62,6 @@ function App() {
           <Nav.Link as={NavLink} to="/about">About</Nav.Link>
           <Nav.Link as={NavLink} to="/aboutaddon">Sheets Add-On</Nav.Link>
           <Nav.Link as={NavLink} to="/feedback" activeClassName="navselected">Give Feedback</Nav.Link>
-          <Nav.Link as={NavLink} to="/optionprices" activeClassName="navselected">Option Prices</Nav.Link>
         </Nav>
       </Navbar >
     </header >

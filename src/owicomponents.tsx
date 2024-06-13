@@ -62,8 +62,8 @@ export interface ExpirationDateMap {
 
 }
 
-export type OptionChainFromTD = OptionChainFromTDx | null
-export interface OptionChainFromTDx {
+export type OptionChainFromTDN = OptionChainFromTD | null
+export interface OptionChainFromTD {
 	symbol: string,
 	status: string,
 	underlying: {
@@ -127,7 +127,7 @@ export enum ComboType {
 }
 
 interface OptionExpirationsProps {
-	data: OptionChainFromTD,
+	data: OptionChainFromTDN,
 	dates: string[],
 	type: ComboType,
 	amBuying: boolean
@@ -155,7 +155,7 @@ export function OptionExpirations(props: OptionExpirationsProps) {
 
 interface OptionExpirationProps {
 	title: string,
-	data: OptionChainFromTD,
+	data: OptionChainFromTDN,
 	date: string,
 	type: ComboType,
 	amBuying: boolean
@@ -354,7 +354,7 @@ function percentFormat(num: number) {
 
 interface OptionRowProps {
 	strike: string,
-	data: OptionChainFromTD,
+	data: OptionChainFromTDN,
 	type: ComboType,
 	amBuying: boolean,
 	put: OptionPriceInfo,
@@ -458,7 +458,7 @@ function parseLocaleNumber(str:string) {
 	return parseFloat(str);
 }
 interface StockInfoProps {
-	data: OptionChainFromTD
+	data: OptionChainFromTDN
 }
 
 /**

@@ -1,10 +1,9 @@
-//import { log } from './util'
-
+import { log, runningLocally } from './util'
 import Cryptr from 'cryptr';
 const cryptr = new Cryptr(process.env.KEY42 || "foo");
-const debuggingServerLocally = false
-const server = (debuggingServerLocally && window.location.hostname === "localhost") ? 'http://localhost:8080' : 'https://tdnode.onrender.com'
- //'https://sj-td.herokuapp.com'  //https://resultify.live'
+const debuggingServerLocally = true
+export const server = (debuggingServerLocally && runningLocally) ? 'http://localhost:80' : 'https://tdnode.onrender.com'
+
 
 /**
 	 * Performs http get request from our node.js server
@@ -12,15 +11,15 @@ const server = (debuggingServerLocally && window.location.hostname === "localhos
 	 * @param {string} route the url .
 	 * @return [response in JSON(null if error), error object]
 	 */
-export async function get(route: string) {
+export async function get(route: string) : Promise<[unknown, unknown]> {
 
 	try {
 		const rawResponse = await fetch(`${server}/${route}`);
 		const json = await rawResponse.json()
-		return [json]
+		return [json,null]
 	}
 	catch (error) {
-		console.error(`get: error occurred ${error}`);
+		log(`get: error occurred ${error}`);
 		return [null, error]
 	}
 }
@@ -57,7 +56,7 @@ export async function post(data: Record<string, unknown>, route = 'feedback', en
 	}
 
 	catch (error: any) {
-		console.error(`post: error occurred with fetch ${error}`);
+		log(`post: error occurred with fetch ${error}`);
 		return [false, error.toString()]
 	}
 }
