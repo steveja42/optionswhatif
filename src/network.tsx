@@ -4,7 +4,7 @@ const cryptr = new Cryptr(process.env.KEY42 || "foo");
 const debuggingServerLocally = true
 const runningLocally = window.location.hostname === "localhost"
 
-export const server = (debuggingServerLocally && runningLocally) ? 'http://localhost:80' : 'https://tdnode.onrender.com'
+export const serverURL = (debuggingServerLocally && runningLocally) ? 'http://localhost:80' : 'https://tdnode.onrender.com'
 
 
 /**
@@ -16,7 +16,7 @@ export const server = (debuggingServerLocally && runningLocally) ? 'http://local
 export async function get(route: string) : Promise<[unknown, unknown]> {
 
 	try {
-		const rawResponse = await fetch(`${server}/${route}`);
+		const rawResponse = await fetch(`${serverURL}/${route}`);
 		const json = await rawResponse.json()
 		return [json,null]
 	}
@@ -42,7 +42,7 @@ export async function post(data: Record<string, unknown>, route = 'feedback', en
 		contentType = 'text/plain'
 	}
 	try {
-		const response = await fetch(`${server}/${route}`, {
+		const response = await fetch(`${serverURL}/${route}`, {
 			method: 'POST',
 			body,
 			headers: {

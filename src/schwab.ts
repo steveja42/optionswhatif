@@ -1,6 +1,6 @@
 import { log, debugging } from './util'
 import * as server from './network'
-import { OptionChainFromTD } from './owicomponents'
+import { OptionChain } from './owicomponents'
 
 var currentTokens: AuthTokens;
 
@@ -11,7 +11,7 @@ interface AuthTokens {
 
 const encodedClientIDAndSecret = process.env.REACT_APP_SCHWABENCODEDCLIENTIDANDSECRET
 const schwabClientID = process.env.REACT_APP_SCHWABCLIENTID
-let redirectUrl = server.server + '/tdsjsj'
+let redirectUrl = server.serverURL + '/tdsjsj'
 const schwabUrlToRequestAuthorizationCode = `https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=${schwabClientID}&redirect_uri=${redirectUrl}`;
 export const authNeeded = "auth needed";
 export const authNeededObj = { authStatus: "authNeeded", authUrl: schwabUrlToRequestAuthorizationCode };
@@ -20,13 +20,13 @@ const schwabMarketDataUrl = 'https://api.schwabapi.com/marketdata/v1'
 
 //see https://developer.schwab.com/products/trader-api--individual/details/specifications/Market%20Data%20Production for more info
 
-export async function getOptionChain(symbol: string, contractType = 'ALL', strikeCount = 0): Promise<[OptionChainFromTD | null, Error | null]> {
+export async function getOptionChain(symbol: string, contractType = 'ALL', strikeCount = 0): Promise<[OptionChain | null, Error | null]> {
 	let strikeCountString = (strikeCount > 0) ? `&strikeCount=${strikeCount}` : ''
 	//var url = `${schwabMarketDataUrl}/chains?symbol=${symbol}&contractType=${contractType}&includeQuotes=TRUE${strikeCountString}`
 	//const url = `${schwabMarketDataUrl}/quotes?symbols=${symbol}&fields=quote&indicative=false`
 	const url = `${schwabMarketDataUrl}/chains?symbol=${symbol}&contractType=${contractType}&includeUnderlyingQuote=true${strikeCountString}`
 	const [data, error] = await callSchwabAPI(url)
-	return [data as OptionChainFromTD, error]
+	return [data as OptionChain, error]
 }
 
 /**
@@ -53,8 +53,8 @@ async function getCurrentTokens(): Promise<AuthTokens> {
  * @returns AuthTokens
  */
 async function getNewTokens(): Promise<AuthTokens> {
-	if (!debugging)  //schwab api doesn't work in debug window
-		window.open(schwabUrlToRequestAuthorizationCode, "_blank");  //open Schwab URL in browser for user to loging and provide authorization
+	if (!debugging)  //schwab url auth doesn't work in debug window
+		window.open(schwabUrlToRequestAuthorizationCode, "_blank");  //open Schwab URL in browser for user to login and provide authorization
 
 	[currentTokens] = await server.get(`getnewtokens?shouldOpenBrowser=${debugging}`) as [AuthTokens, unknown]
 	if (currentTokens)

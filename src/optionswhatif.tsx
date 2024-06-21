@@ -7,7 +7,7 @@ import Alert from 'react-bootstrap/Alert'
 import Form from 'react-bootstrap/Form'
 import Container from "react-bootstrap/Container"
 import * as schwab from './schwab'
-import { OptionExpirations, StockInfo,OptionChainFromTDN, OptionTypes, BuySell, Strategy, ComboType  } from './owicomponents'
+import { OptionExpirations, StockInfo,OptionChainN, OptionTypes, BuySell, Strategy, ComboType  } from './owicomponents'
 
 const log = console.log
 interface Props {
@@ -20,7 +20,7 @@ interface State {
 	strategy: Strategy,
 	dateOptions?: any,
 	datesSelected: string[],
-	data?: OptionChainFromTDN,
+	data?: OptionChainN,
 	optionMap?: any,
 	showSuccess: boolean,
 	showFailure?: string,
@@ -142,7 +142,7 @@ export class OptionsWhatIf extends React.Component<Props, State>  {
 	 *
 	 * @param event
 	 */
-setExpirationDates(data:OptionChainFromTDN, type = this.state.type) {
+setExpirationDates(data:OptionChainN, type = this.state.type) {
 		let dateOptions = null
 		if (!data)
 			return
@@ -158,7 +158,7 @@ setExpirationDates(data:OptionChainFromTDN, type = this.state.type) {
 			return
 		this.fetching = true
 		//let route = `optchain?symbol=${symbol.toUpperCase()}`
-		let [result, error] = await schwab.getOptionChain(symbol.toUpperCase(), undefined, strikeCount) 
+		const [result, error] = await schwab.getOptionChain(symbol.toUpperCase(), undefined, strikeCount) 
 		this.fetching = false
 		if (result) {
 			if (this.areNoWrongExpirationDates(result)) {
@@ -178,7 +178,7 @@ setExpirationDates(data:OptionChainFromTDN, type = this.state.type) {
 		}
 	}
 	//sometimes TD sends us wrong expiration dates, so check for that
-	areNoWrongExpirationDates(data:OptionChainFromTDN) {
+	areNoWrongExpirationDates(data:OptionChainN) {
 		if ((data?.status === 'SUCCESS') && this.state.datesSelected) {
 			const optionMap = data.putExpDateMap // (this.state.type === "PUT") ? dataToCheck.putExpDateMap : dataToCheck.callExpDateMap;
 			for (let date of this.state.datesSelected) {
