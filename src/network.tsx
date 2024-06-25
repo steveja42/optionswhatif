@@ -1,10 +1,10 @@
 import { log} from './util'
 import Cryptr from 'cryptr';
 const cryptr = new Cryptr(process.env.KEY42 || "foo");
-const debuggingServerLocally = true
+const useLocalServer = false
 const runningLocally = window.location.hostname === "localhost"
 
-export const serverURL = (debuggingServerLocally && runningLocally) ? 'http://localhost:80' : 'https://tdnode.onrender.com'
+export const serverURL = (useLocalServer && runningLocally) ? 'http://localhost:80' : 'https://tdnode.onrender.com'
 
 
 /**
