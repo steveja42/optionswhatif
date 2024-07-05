@@ -2,6 +2,9 @@ import { log, debugging } from './util'
 import * as server from './network'
 import { OptionChain } from './owicomponents'
 
+const emptyTokens = { access_token: "", refresh_token: "" }
+const TokenStorageKey = 'Tokens'
+
 var currentTokens: AuthTokens;
 
 interface AuthTokens {
@@ -36,15 +39,30 @@ function shortenToken(token: string): string {
 	return `${token.slice(0, 5)}...${token.slice(-5)}`
 }
 
+function setCurrentTokens(tokens: AuthTokens) {
+	currentTokens = tokens;
+	if (!tokens)
+		tokens = emptyTokens
+	localStorage.setItem(TokenStorageKey, JSON.stringify(tokens))
+}
+
 /**
  * if we don't have auth tokens yet, request from the server
  * @returns 
  */
 async function getCurrentTokens(): Promise<AuthTokens> {
+	if (!currentTokens?.access_token) {
+		log("accessing stored tokens")
+		const str = localStorage.getItem(TokenStorageKey)
+		if (str)
+			currentTokens = JSON.parse(str)
+	}
+		
 	if (!currentTokens?.access_token)
 		[currentTokens] = await server.get('getcurrenttokens') as [AuthTokens, unknown]
 	if (!currentTokens)
-		return { access_token: "", refresh_token: "" }
+		currentTokens = emptyTokens
+	setCurrentTokens(currentTokens)
 	return currentTokens
 }
 
@@ -52,7 +70,7 @@ async function getCurrentTokens(): Promise<AuthTokens> {
  * request new auth tokens from the server
  * @returns AuthTokens
  */
-async function getNewTokens(): Promise<AuthTokens> {
+export async function getNewTokens(): Promise<AuthTokens> {
 	if (!debugging)  //schwab url auth doesn't work in debug window
 		window.open(schwabUrlToRequestAuthorizationCode, "_blank");  //open Schwab URL in browser for user to login and provide authorization
 
@@ -60,7 +78,8 @@ async function getNewTokens(): Promise<AuthTokens> {
 	if (currentTokens)
 		log(`got new Authorization- refreshToken:${shortenToken(currentTokens.refresh_token)} accessToken:${shortenToken(currentTokens.access_token)}`);
 	else
-		currentTokens = { access_token: "", refresh_token: "" }
+		currentTokens = emptyTokens
+	setCurrentTokens(currentTokens)
 	return currentTokens
 }
 
@@ -93,12 +112,13 @@ async function refreshTheToken(refreshToken: string): Promise<string> {
 		.then(
 			data => {
 				log(`refreshTheToken: got new accessToken:${shortenToken(data.access_token)}`);
-				currentTokens = data;
+				setCurrentTokens(data)
 				return data.access_token;
 			})
 		.catch(
 			error => {
 				log(`Error in refreshTheToken:${error.message}`);
+				setCurrentTokens(emptyTokens)
 				return "";
 			});
 

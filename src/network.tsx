@@ -1,7 +1,7 @@
 import { log} from './util'
 import Cryptr from 'cryptr';
 const cryptr = new Cryptr(process.env.KEY42 || "foo");
-const useLocalServer = false
+const useLocalServer = process.env.REACT_APP_USE_LOCAL_SERVER
 const runningLocally = window.location.hostname === "localhost"
 
 export const serverURL = (useLocalServer && runningLocally) ? 'http://localhost:80' : 'https://tdnode.onrender.com'
