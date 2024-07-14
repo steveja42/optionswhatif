@@ -1,7 +1,7 @@
 
 import ReactGA from 'react-ga'; // https://github.com/react-ga/react-ga
 import React, { useEffect } from 'react';
-import { trackPage } from './util'
+import {log, trackPage,ll } from './util'
 import { getNewTokens } from './schwab'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,15 +23,14 @@ import {
   NavLink, useLocation,
 } from "react-router-dom";
 
-const log = console.log
-console.log(window.location.hostname)
+log(ll.normal, window.location.hostname)
 const googleAnalyticsTrackingID = process.env.REACT_APP_GOOGLE_TRACKING_ID
 if (googleAnalyticsTrackingID) {
   ReactGA.initialize(googleAnalyticsTrackingID);   // Add your tracking ID created from https://analytics.google.com/analytics/web/#home/
 }
 
 function setPageview(url: string) {
-  log(url)
+  log(ll.normal, url)
   trackPage(url)
   ReactGA.pageview(url)
 }

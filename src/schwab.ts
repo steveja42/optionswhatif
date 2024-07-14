@@ -1,4 +1,4 @@
-import { log, debugging } from './util'
+import { log, debugging, ll } from './util'
 import * as server from './network'
 import { OptionChain } from './owicomponents'
 
@@ -52,7 +52,7 @@ function setCurrentTokens(tokens: AuthTokens) {
  */
 async function getCurrentTokens(): Promise<AuthTokens> {
 	if (!currentTokens?.access_token) {
-		log("accessing stored tokens")
+		log(ll.normal, "accessing stored tokens")
 		const str = localStorage.getItem(TokenStorageKey)
 		if (str)
 			currentTokens = JSON.parse(str)
@@ -76,7 +76,7 @@ export async function getNewTokens(): Promise<AuthTokens> {
 
 	[currentTokens] = await server.get(`getnewtokens?shouldOpenBrowser=${debugging}`) as [AuthTokens, unknown]
 	if (currentTokens)
-		log(`got new Authorization- refreshToken:${shortenToken(currentTokens.refresh_token)} accessToken:${shortenToken(currentTokens.access_token)}`);
+		log(ll.normal, `got new Authorization- refreshToken:${shortenToken(currentTokens.refresh_token)} accessToken:${shortenToken(currentTokens.access_token)}`);
 	else
 		currentTokens = emptyTokens
 	setCurrentTokens(currentTokens)
@@ -111,13 +111,13 @@ async function refreshTheToken(refreshToken: string): Promise<string> {
 			})
 		.then(
 			data => {
-				log(`refreshTheToken: got new accessToken:${shortenToken(data.access_token)}`);
+				log(ll.normal, `refreshTheToken: got new accessToken:${shortenToken(data.access_token)}`);
 				setCurrentTokens(data)
 				return data.access_token;
 			})
 		.catch(
 			error => {
-				log(`Error in refreshTheToken:${error.message}`);
+				log(ll.normal, `Error in refreshTheToken:${error.message}`);
 				setCurrentTokens(emptyTokens)
 				return "";
 			});
@@ -152,22 +152,22 @@ export async function callSchwabAPI(url: string): Promise<[unknown, Error | null
 		console.error('callSchwabAPI error', error);
 		return [null, error]
 	}
-	log(`first request was unauthorized, trying refreshing: token ${shortenToken(access_token)} `);
+	log(ll.normal, `first request was unauthorized, trying refreshing: token ${shortenToken(access_token)} `);
 	access_token = await refreshTheToken(refresh_token)
 
 	if (!access_token) {
-		log(`couldn't refresh the token`)
+		log(ll.normal, `couldn't refresh the token`)
 		if (gotNewTokens) {
 			return [null, Error("failed to refresh Access token")];
 		}
 		else {
 			({ access_token } = await getNewTokens()) //try getting new access tokens
 			if (!access_token) {
-				log("callSchwabAPI failed to get new Access token");
+				log(ll.normal, "callSchwabAPI failed to get new Access token");
 				return [null, Error("failed to get new Access token")];
 			}
 			else
-				log(`got new token ${shortenToken(access_token)} `)
+				log(ll.normal, `got new token ${shortenToken(access_token)} `)
 		}
 
 	}
@@ -196,12 +196,12 @@ async function makeRequest(token: string, url: string): Promise<[unknown, Error 
 			return [await response.json(), null]
 		}
 		else {
-			log(`Error ${response.status} ${response.statusText}`)
+			log(ll.normal, `Error ${response.status} ${response.statusText}`)
 			return [null, Error(`${response.status} ${response.statusText}`)]
 		}
 	}
 	catch (error) {
-		log(`Error ${error}`)
+		log(ll.normal, `Error ${error}`)
 		return [null, error as Error]
 	}
 

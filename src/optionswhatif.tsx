@@ -8,8 +8,8 @@ import Form from 'react-bootstrap/Form'
 import Container from "react-bootstrap/Container"
 import * as schwab from './schwab'
 import { OptionExpirations, StockInfo,OptionChainN, OptionTypes, BuySell, Strategy, ComboType  } from './owicomponents'
+import { log,ll} from './util'
 
-const log = console.log
 interface Props {
 
 }
@@ -115,7 +115,7 @@ export class OptionsWhatIf extends React.Component<Props, State>  {
 
 	datesChanged:React.ChangeEventHandler<HTMLSelectElement> = (event) => {
 		const datesSelected = Array.from(event.target.selectedOptions, option => option.value);
-		log(event.target.value)
+		log(ll.normal, event.target.value)
 		this.setState({ datesSelected });
 	}
 
@@ -183,7 +183,7 @@ setExpirationDates(data:OptionChainN, type = this.state.type) {
 			const optionMap = data.putExpDateMap // (this.state.type === "PUT") ? dataToCheck.putExpDateMap : dataToCheck.callExpDateMap;
 			for (let date of this.state.datesSelected) {
 				if (!optionMap?.[date]) {
-					log(`data error: expiration ${date} not in ${JSON.stringify(optionMap).slice(0, 12)}...`)
+					log(ll.normal, `data error: expiration ${date} not in ${JSON.stringify(optionMap).slice(0, 12)}...`)
 					return false
 				}
 
@@ -196,8 +196,8 @@ setExpirationDates(data:OptionChainN, type = this.state.type) {
 
 	componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
 		// You can also log the error to an error reporting service
-		log(error)
-		log(errorInfo)
+		log(ll.normal, error)
+		log(ll.normal, errorInfo)
 	}
 	//onSubmit={this.handleSubmit}  action="http://localhost:8080/feedback" method="post"   action="http://localhost:8081/process_post" method="post"
 	render() {

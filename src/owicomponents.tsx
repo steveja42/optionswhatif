@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table'
-const log = console.log
+import { log,ll} from './util'
 
 interface OptionPriceInfo {
 	putCall: string,
@@ -173,7 +173,7 @@ function OptionExpiration(props: OptionExpirationProps) {
 	const preHeaders = (type !== "straddle") ? ['', '', '', '', '', '', 'If Price Goes to'] : ['', '', '', '', '', '', '', '', '', '', '', '', 'If Price Goes to']
 
 	if (!data) {
-		log("no data")
+		log(ll.normal, "no data")
 		return null
 	}
 

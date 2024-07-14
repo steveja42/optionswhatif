@@ -1,4 +1,4 @@
-import { log} from './util'
+import { log,ll} from './util'
 import Cryptr from 'cryptr';
 const cryptr = new Cryptr(process.env.KEY42 || "foo");
 const useLocalServer = process.env.REACT_APP_USE_LOCAL_SERVER
@@ -21,7 +21,7 @@ export async function get(route: string) : Promise<[unknown, unknown]> {
 		return [json,null]
 	}
 	catch (error) {
-		log(`get: error occurred ${error}`);
+		log(ll.normal, `get: error occurred ${error}`);
 		return [null, error]
 	}
 }
@@ -58,7 +58,7 @@ export async function post(data: Record<string, unknown>, route = 'feedback', en
 	}
 
 	catch (error: any) {
-		log(`post: error occurred with fetch ${error}`);
+		log(ll.normal, `post: error occurred with fetch ${error}`);
 		return [false, error.toString()]
 	}
 }
