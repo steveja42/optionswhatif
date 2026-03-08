@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OptionsWhatIf — Next.js
 
-## Getting Started
+Stock Option Profit Calculator — Next.js 16.1 / App Router / Netlify.
 
-First, run the development server:
+## Local Development
+
+For most development (no Netlify Blobs needed):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Important:** Local development that requires Netlify Blobs (token storage for Schwab OAuth) must use the Netlify CLI instead:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev:netlify
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This starts `netlify dev`, which provides the Netlify Blobs runtime locally. Use this whenever you need the Schwab OAuth flow or quote fetching to work end-to-end.
 
-## Learn More
+## Initial Schwab Auth Setup
 
-To learn more about Next.js, take a look at the following resources:
+On first deploy to Netlify:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Visit `/api/auth/schwab/login` in your browser.
+2. You will be redirected to Schwab's authorization page — log in and approve access.
+3. Schwab redirects back to `/api/auth/schwab/callback`, which exchanges the code for tokens and stores them in Netlify Blobs.
+4. All subsequent token refreshes are handled automatically by the server — no manual steps needed.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Environment Variables
 
-## Deploy on Vercel
+Copy `.env.local` and fill in your Schwab credentials:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+SCHWAB_API_KEY=        # Your Schwab app client ID
+SCHWAB_API_SECRET=     # Your Schwab app client secret
+SCHWAB_REDIRECT_URI=   # Must match what's registered in your Schwab app
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`NETLIFY_SITE_ID` and `NETLIFY_TOKEN` are provided automatically by the Netlify runtime — do not add them manually.
+
+## Build & Deploy
+
+Deployed on Netlify. Build configuration is in `netlify.toml`.
+
+```bash
+pnpm build   # production build
+```
