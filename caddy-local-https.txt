@@ -1,0 +1,73 @@
+LOCAL HTTPS WITH CADDY
+======================
+
+WHY
+---
+Schwab OAuth requires HTTPS for callback URLs. The Next.js dev server only
+speaks plain HTTP. Caddy sits in between and handles the HTTPS layer.
+
+
+HOW IT WORKS
+------------
+Browser --> https://127.0.0.1:8080 (Caddy, HTTPS) --> http://127.0.0.1:8888 (Netlify Dev) --> http://127.0.0.1:3000 (Next.js)
+
+You always visit https://127.0.0.1:8080 in the browser.
+Ports 8888 and 3000 are internal only — never accessed directly.
+
+
+REGISTERED SCHWAB CALLBACK
+---------------------------
+https://127.0.0.1:8080/api/auth/schwab/callback
+(registered in the Schwab developer portal)
+
+
+.env.local
+----------
+SCHWAB_REDIRECT_URI=https://127.0.0.1:8080/api/auth/schwab/callback
+
+
+ONE-TIME SETUP (per machine)
+-----------------------------
+1. Download caddy.exe from https://caddyserver.com/download (Windows amd64)
+   Place caddy.exe anywhere on your PATH, or in c:\dev\optionswhatif\
+
+2. Trust Caddy's local root CA so the browser accepts its certificates.
+   The admin API is enabled automatically when Caddy runs, so just:
+
+   Terminal 1:
+     caddy run
+
+   Wait for: "serving initial configuration" in the output
+
+   Terminal 2:
+     caddy trust
+
+   Stop Terminal 1 (Ctrl+C). Trust is permanent — never needed again on
+   this machine.
+
+
+RUNNING (every dev session)
+---------------------------
+Terminal 1 — start the app:
+  pnpm dev:netlify
+
+Wait for:
+  Local dev server ready: http://localhost:8888
+
+Terminal 2 — start Caddy:
+  caddy reverse-proxy --from https://127.0.0.1:8080 --to http://127.0.0.1:8888 --internal-certs
+
+Then visit https://127.0.0.1:8080 in your browser.
+
+
+SCHWAB AUTH FLOW
+----------------
+1. Visit https://127.0.0.1:8080/api/auth/schwab/login
+2. Log in on Schwab's website
+3. Schwab redirects back to https://127.0.0.1:8080/api/auth/schwab/callback
+4. Tokens are saved to the local Netlify Blobs store
+5. Navigate to https://127.0.0.1:8080 to use the app
+
+Note: after the callback, the app may redirect to http://localhost:3000 which
+can show an SSL error in the browser. This is harmless — the tokens are
+already stored. Just navigate manually to https://127.0.0.1:8080.
