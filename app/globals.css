@@ -102,6 +102,7 @@ table {
 }
 .stocktable .leftborder {
   border-left: 1px solid black;
+  padding-left: 0.75rem;
 }
 .stocktable .noborder {
   border: none;
@@ -113,6 +114,20 @@ table {
 .stocktable thead:nth-of-type(2) th,
 .stocktable thead:nth-of-type(3) th {
   border-bottom: 1px solid #cccccc;
+}
+.stocktable tbody tr:nth-child(odd) {
+  background-color: #f5f5f5;
+}
+.stocktable thead:nth-of-type(3) th:nth-child(n+2):nth-child(-n+6),
+.stocktable tbody td:nth-child(n+2):nth-child(-n+6) {
+  padding-left: 0.75rem;
+  padding-right: 0rem;
+}
+.stocktable thead:nth-of-type(2) th:nth-child(1),
+.stocktable thead:nth-of-type(2) th:nth-child(2),
+.stocktable thead:nth-of-type(2) th:nth-child(3) {
+  border-left: none;
+  border-right: none;
 }
 
 h2 span {
