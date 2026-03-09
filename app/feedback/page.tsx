@@ -9,10 +9,10 @@ export default function FeedbackPage() {
   return (
     <div className="container">
       <div className="row" style={{ alignItems: 'flex-start' }}>
-        <div className="col feedbackform">
+        <div className="col">
           <FeedbackForm />
         </div>
-        <div className="col-auto rounded donatebox">
+        <div className="col-auto">
           <Donate />
         </div>
       </div>

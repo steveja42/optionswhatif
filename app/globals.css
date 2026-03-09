@@ -81,11 +81,120 @@ code {
   pointer-events: none;
 }
 
-.donatebox {
-  border-style: dashed;
+/* ---- Feedback page ---- */
+.feedback-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
-.feedbackform {
-  border-style: ridge;
+.feedback-card-title {
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  font-size: 1.15rem;
+  color: #1a1a2e;
+}
+
+.donate-card {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  min-width: 240px;
+  max-width: 300px;
+}
+.donate-card-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #1a1a2e;
+  margin-bottom: 0.4rem;
+}
+.donate-card-subtitle {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 1.25rem;
+}
+.donate-method {
+  margin-bottom: 1.1rem;
+}
+.donate-method-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.donate-method-icon {
+  font-size: 1rem;
+}
+.paypal-btn {
+  display: block;
+  height: 47px;
+}
+.donate-divider {
+  text-align: center;
+  font-size: 0.78rem;
+  color: #999;
+  margin: 1rem 0;
+  position: relative;
+}
+.donate-divider::before,
+.donate-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 28%;
+  height: 1px;
+  background: #ddd;
+}
+.donate-divider::before { left: 0; }
+.donate-divider::after  { right: 0; }
+
+.donate-crypto-btn {
+  display: inline-block;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+  transition: opacity 0.15s;
+}
+.donate-crypto-btn:hover { opacity: 0.82; }
+.donate-lightning-btn {
+  background: #f7931a;
+  color: #fff;
+}
+.donate-address {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #f5f5f5;
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.78rem;
+  margin-bottom: 0.3rem;
+  word-break: break-all;
+}
+.donate-copy-btn {
+  background: none;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  color: #555;
+}
+.donate-copy-btn:hover { background: #e8e8e8; }
+.donate-hint {
+  font-size: 0.75rem;
+  color: #888;
 }
 
 table {
@@ -148,6 +257,7 @@ th input {
 
 .navbar {
   border: 1px none;
+  margin-bottom: .6rem;
 }
 .stockform {
   border-bottom: 1px solid;

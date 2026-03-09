@@ -9,10 +9,10 @@ export function Navbar() {
 
   return (
     <header className="App-header">
-      <nav className="navbar navbar-expand-sm navbar-light bg-light">
-        <Link href="/" className="navbar-brand">
-          <Image src="/favicon.ico" width={30} height={30} className="d-inline-block align-top" alt="" />
-          {' '}OptionsWhatIf
+      <nav className="navbar navbar-expand-sm navbar-light bg-light" style={{padding: 0, minHeight: '56px'}}>
+        <Link href="/" className="navbar-brand d-flex align-items-center" style={{paddingLeft: '0.5rem', margin: 0, height: '56px'}}>
+          <Image src="/icon32.png" width={0} height={0} sizes="56px" style={{width: 'auto', height: '100%', marginRight: '8px'}} className="d-inline-block" alt="" />
+          OptionsWhatIf
         </Link>
         <div className="navbar-nav">
           <Link
