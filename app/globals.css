@@ -29,6 +29,58 @@ code {
   box-shadow: none;
 }
 
+
+/* Nudge toggle groups down to align their center with the select control center */
+.form-group:has(.toggle-switch-group) {
+  padding-top: 1.4rem !important;
+}
+
+/* Vertical toggle switch groups */
+.toggle-switch-group {
+  display: flex;
+  flex-direction: column;
+  width: 5rem;
+}
+
+.toggle-switch-group input[type="radio"] {
+  display: none;
+}
+
+.toggle-switch-group .toggle-switch-btn {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: #555555 !important;
+  color: #000000 !important;
+  border: 1px solid #3a3a3a !important;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  text-align: center;
+  user-select: none;
+  box-shadow: none !important;
+}
+
+.toggle-switch-group .toggle-switch-btn:first-of-type {
+  border-radius: 6px 6px 0 0;
+}
+
+.toggle-switch-group .toggle-switch-btn:last-of-type {
+  border-radius: 0 0 6px 6px;
+  border-top: none !important;
+}
+
+.toggle-switch-group .toggle-switch-btn.active {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #aaaaaa !important;
+}
+
+.toggle-switch-group.disabled .toggle-switch-btn {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .donatebox {
   border-style: dashed;
 }
@@ -106,8 +158,15 @@ th input {
     padding: 10px;
     display: flex;
     flex-flow: row wrap;
-    align-items: center;
+    align-items: stretch;
     gap: 6px;
+  }
+
+  .form-inline > .form-group,
+  .form-inline > fieldset {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
   }
 
   .form-inline * {

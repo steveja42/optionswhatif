@@ -213,28 +213,32 @@ export class OptionsWhatIf extends Component<Record<string, never>, State> {
             </div>
 
             {/* PUT / CALL toggle */}
-            <fieldset className="mytb" disabled={strategy !== 'single'}>
-              <label className={`btn btn-light${type === 'PUT' ? ' active' : ''}`}>
-                <input type="radio" value="PUT" checked={type === 'PUT'} disabled={strategy !== 'single'} onChange={this.optionTypeChanged} />
-                Put
-              </label>
-              <label className={`btn btn-light${type === 'CALL' ? ' active' : ''}`}>
-                <input type="radio" value="CALL" checked={type === 'CALL'} disabled={strategy !== 'single'} onChange={this.optionTypeChanged} />
-                Call
-              </label>
-            </fieldset>
+            <div className="form-group">
+              <div className={`btn-group-vertical toggle-switch-group${strategy !== 'single' ? ' disabled' : ''}`} role="group">
+                <label className={`btn toggle-switch-btn${type === 'PUT' ? ' active' : ''}`}>
+                  <input type="radio" value="PUT" checked={type === 'PUT'} disabled={strategy !== 'single'} onChange={this.optionTypeChanged} />
+                  Put
+                </label>
+                <label className={`btn toggle-switch-btn${type === 'CALL' ? ' active' : ''}`}>
+                  <input type="radio" value="CALL" checked={type === 'CALL'} disabled={strategy !== 'single'} onChange={this.optionTypeChanged} />
+                  Call
+                </label>
+              </div>
+            </div>
 
             {/* BUY / SELL toggle */}
-            <fieldset className="mytb" disabled={strategy !== 'single'}>
-              <label className={`btn btn-light${buySell === 'BUY' ? ' active' : ''}`}>
-                <input type="radio" name="buySell" value="BUY" checked={buySell === 'BUY'} disabled={strategy !== 'single'} onChange={this.handleChange} />
-                Buy
-              </label>
-              <label className={`btn btn-light${buySell === 'SELL' ? ' active' : ''}`}>
-                <input type="radio" name="buySell" value="SELL" checked={buySell === 'SELL'} disabled={strategy !== 'single'} onChange={this.handleChange} />
-                Sell
-              </label>
-            </fieldset>
+            <div className="form-group">
+              <div className={`btn-group-vertical toggle-switch-group${strategy !== 'single' ? ' disabled' : ''}`} role="group">
+                <label className={`btn toggle-switch-btn${buySell === 'BUY' ? ' active' : ''}`}>
+                  <input type="radio" name="buySell" value="BUY" checked={buySell === 'BUY'} disabled={strategy !== 'single'} onChange={this.handleChange} />
+                  Buy
+                </label>
+                <label className={`btn toggle-switch-btn${buySell === 'SELL' ? ' active' : ''}`}>
+                  <input type="radio" name="buySell" value="SELL" checked={buySell === 'SELL'} disabled={strategy !== 'single'} onChange={this.handleChange} />
+                  Sell
+                </label>
+              </div>
+            </div>
 
             <div className="form-group">
               <label>Strikes</label>
