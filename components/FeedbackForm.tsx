@@ -38,7 +38,10 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
     const sitekey = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY
     if (sitekey && window.grecaptcha) {
       setTimeout(() => {
-        window.grecaptcha.render('recaptcha', { sitekey })
+        const el = document.getElementById('recaptcha')
+        if (el && el.childElementCount === 0) {
+          window.grecaptcha.render('recaptcha', { sitekey })
+        }
       }, 300)
     }
   }
