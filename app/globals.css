@@ -110,6 +110,10 @@ table {
   border-left: 1px solid black;
   border-right: 1px solid black;
 }
+.stocktable thead:nth-of-type(2) th,
+.stocktable thead:nth-of-type(3) th {
+  border-bottom: 1px solid #cccccc;
+}
 
 h2 span {
   font-size: 0.5em;
