@@ -27,7 +27,7 @@ export default function AboutSheetsAddon() {
         Price data on a sheet can be updated by selecting the &ldquo;Update prices&rdquo; button on the sidebar.
         The mid point of the bid/ask is used as the option price. Profit is based on intrinsic value.
       </p>
-      <Image src="/sheetsaddonscreenshot.png" alt="screenshot of Google Sheet" className="graphic" width={800} height={600} style={{ maxWidth: '100%', height: 'auto' }} />
+      <Image src="/sheetsaddonscreenshot.png" alt="screenshot of Google Sheet" className="graphic" width={1200} height={900} style={{ width: '100%', height: 'auto' }} />
     </div>
   )
 }
