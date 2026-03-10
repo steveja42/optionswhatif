@@ -101,6 +101,15 @@ export interface OptionChain {
 
 export type OptionChainN = OptionChain | null
 
+export interface FeedbackPayload {
+  source: string
+  type: string
+  name: string
+  email: string
+  feedback: string
+  grecaptchaResponse: string
+}
+
 export type OptionTypes = 'PUT' | 'CALL'
 export type BuySell = 'BUY' | 'SELL'
 export type Strategy = 'single' | 'straddle'
