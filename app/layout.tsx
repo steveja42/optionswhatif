@@ -6,9 +6,33 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.optionswhatif.com'),
   title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
   description:
     'Analyze stock option ROI and profit with our interactive visualizer. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
+  openGraph: {
+    title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
+    description:
+      'Analyze stock option ROI and profit with our interactive visualizer. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
+    url: 'https://www.optionswhatif.com',
+    siteName: 'OptionsWhatIf',
+    images: [
+      {
+        url: '/api/og',
+        width: 1200,
+        height: 630,
+        alt: 'OptionsWhatIf - Options Profit Calculator',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
+    description:
+      'Analyze stock option ROI and profit with our interactive visualizer. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
+    images: ['/api/og'],
+  },
 }
 
 const schemaMarkup = {
