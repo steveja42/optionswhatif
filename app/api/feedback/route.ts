@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
   console.log('[feedback]', JSON.stringify(body))
   const subject = `${body.source} ${body.type} from ${body.name}`
   const text = `${body.type} regarding ${body.source} from ${body.name} - ${body.email}\n${body.feedback}\n` + JSON.stringify(body)
+  body.grecaptchaResponse = ''
   try {
     await sendMail(subject, text, body.email)
   } catch (err) {
@@ -33,10 +34,10 @@ export async function sendMail(subject = 'subject  ✔', text = 'email text', re
 		apiKey: process.env.MailerSend_API_KEY ?? '',
 	});
 
-	const sentFrom = new Sender(process.env.email_sender ?? '', "TDNode Feedback");
+	const sentFrom = new Sender(process.env.email_sender ?? '', "OptionsWhatIf Feedback");
 
 	const recipients = [
-		new Recipient(process.env.email_receiver ?? '', "TDNode")
+		new Recipient(process.env.email_receiver ?? '', "OptionsWhatIf")
 	];
 
 	const emailParams = new EmailParams()
