@@ -6,7 +6,7 @@ export const runtime = 'edge'
 const WIDTH = 1200
 const HEIGHT = 630
 
-const LOGO_URL = 'https://www.optionswhatif.com/logo100.png'
+const LOGO_URL = 'https://www.optionswhatif.com/logo512.png'
 
 type Row = { label: string; profit: number }
 
@@ -83,10 +83,10 @@ function BrandedImage() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={LOGO_URL}
-        width={80}
-        height={80}
+        width={200}
+        height={200}
         alt="logo"
-        style={{ marginBottom: 24, borderRadius: 12 }}
+        style={{ marginBottom: 24, borderRadius: 24 }}
       />
       {/* App name */}
       <div style={{ display: 'flex', fontSize: 72, fontWeight: 800, color: '#f8fafc', letterSpacing: '-2px' }}>
@@ -159,10 +159,10 @@ function TickerImage({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={LOGO_URL}
-          width={40}
-          height={40}
+          width={100}
+          height={100}
           alt="logo"
-          style={{ borderRadius: 8, marginRight: 14 }}
+          style={{ borderRadius: 12, marginRight: 14 }}
         />
         <span style={{ fontSize: 22, color: '#60a5fa', fontWeight: 700 }}>OptionsWhatIf</span>
       </div>
