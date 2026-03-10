@@ -6,10 +6,36 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Options WhatIf - stock option investing tool',
+  title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
   description:
-    'Stock Option investing tool that shows potential profit for the stock options you select to help you in your trading and investing',
+    'Analyze stock option ROI and profit with our interactive visualizer. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
 }
+
+const schemaMarkup = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  'name': 'OptionsWhatIf',
+  'applicationCategory': 'FinanceApplication',
+  'applicationSubCategory': 'Options Trading Tool',
+  'operatingSystem': 'Web',
+  'url': 'https://www.optionswhatif.com',
+  'description': 'An interactive stock option profit calculator and ROI visualizer. Model Puts, Calls, and Straddles with real-time data integration to visualize trading outcomes.',
+  'offers': {
+    '@type': 'Offer',
+    'price': '0',
+    'priceCurrency': 'USD',
+  },
+  'featureList': [
+    'Real-time Options Profit Visualization',
+    'Strategy Modeling for Straddles, Puts, and Calls',
+    'ROI Probability Calculator',
+    'Google Sheets Integration'
+  ],
+  'author': {
+    '@type': 'Organization',
+    'name': 'OptionsWhatIf'
+  }
+};
 
 export default function RootLayout({
   children,
@@ -19,6 +45,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
+        />
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
