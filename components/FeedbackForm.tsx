@@ -8,6 +8,7 @@ declare global {
       render: (id: string, opts: { sitekey: string }) => void
       getResponse: () => string
     }
+    onRecaptchaLoad: () => void
   }
 }
 
@@ -36,13 +37,19 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
 
   componentDidMount() {
     const sitekey = process.env.NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY
-    if (sitekey && window.grecaptcha) {
-      setTimeout(() => {
-        const el = document.getElementById('recaptcha')
-        if (el && el.childElementCount === 0) {
-          window.grecaptcha.render('recaptcha', { sitekey })
-        }
-      }, 300)
+    if (!sitekey) return
+
+    const renderCaptcha = () => {
+      const el = document.getElementById('recaptcha')
+      if (el && el.childElementCount === 0) {
+        window.grecaptcha.render('recaptcha', { sitekey })
+      }
+    }
+
+    if (window.grecaptcha) {
+      renderCaptcha()
+    } else {
+      window.onRecaptchaLoad = renderCaptcha
     }
   }
 
