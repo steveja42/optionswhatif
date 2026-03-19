@@ -54,3 +54,6 @@ Bootstrap 5 via CDN (loaded in app/layout.tsx). Custom overrides in app/globals.
 
 ## Git / GitHub
 The GitHub repo is the same one previously used for the old CRA version of optionswhatif. Force-push replaced the old code. The Netlify site is connected to this repo and auto-deploys on push to master, to domain https://www.optionswhatif.com .
+
+## Companion add-on
+A companion google sheets add-on is at folder ..\optionswhatif_gsheets
