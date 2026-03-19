@@ -12,6 +12,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
+  // Determine source from Referer header, overriding whatever the client sent
+  const referer = request.headers.get('referer') ?? ''
+  if (referer.includes('google.com') || referer.includes('script.googleusercontent.com')) {
+    body.source = 'googleSheetsAddOn'
+  } 
+  console.log(`referer: ${referer}, determined source: ${body.source}`)
+
   // Log server-side (visible in Netlify function logs)
   console.log('[feedback]', JSON.stringify(body))
   const subject = `${body.source} ${body.type} from ${body.name}`
