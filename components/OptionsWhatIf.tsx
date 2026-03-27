@@ -255,7 +255,7 @@ export class OptionsWhatIf extends Component<Record<string, never>, State> {
 
             <div className="form-group">
               <label>Choose option dates (Ctrl + Click)</label>
-              <select name="dates" multiple className="form-control" style={{ width: '12ch', minWidth: '12ch' }} onChange={this.datesChanged} value={datesSelected}>
+              <select name="dates" multiple className="form-control" style={{ width: '12ch', minWidth: '12ch', paddingLeft: '2px' }} onChange={this.datesChanged} value={datesSelected}>
                 {this.state.dateOptions}
               </select>
             </div>
