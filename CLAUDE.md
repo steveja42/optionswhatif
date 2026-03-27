@@ -12,8 +12,21 @@ Netlify. Build config is in netlify.toml. Plugin: @netlify/plugin-nextjs.
 
 ## Dev commands
 - `pnpm dev` — standard Next.js dev server (no Netlify Blobs)
-- `pnpm dev:netlify` — use this when testing anything that touches Schwab auth or token storage (requires Netlify CLI)
+- `pnpm dev:netlify` — use this when testing anything that touches Schwab auth or token storage. Starts Netlify Dev (port 8888) and Caddy HTTPS proxy (port 8080) together. Visit https://127.0.0.1:8080 in the browser.
 - `pnpm build` — production build, run this to verify before pushing
+
+## Local HTTPS (Caddy)
+Schwab OAuth requires HTTPS for the callback URL. Caddy proxies https://127.0.0.1:8080 → http://127.0.0.1:8888 (Netlify Dev) and handles TLS with internal certs.
+
+One-time setup per machine:
+1. Download caddy.exe from https://caddyserver.com/download (Windows amd64), place on PATH or in project root.
+2. Run `caddy run` in one terminal, then `caddy trust` in another, then stop the first. Trust is permanent.
+
+`pnpm dev:netlify` starts both Netlify Dev and Caddy automatically. Both processes stop together on Ctrl+C.
+
+Local OAuth flow: visit https://127.0.0.1:8080/api/auth/schwab/login — tokens are stored in the local Netlify Blobs store (separate from production).
+
+Note: after the Schwab callback the app may redirect to http://localhost:3000 (SSL error). This is harmless — tokens are already saved. Navigate manually to https://127.0.0.1:8080.
 
 ## Project structure
 - `app/` — Next.js App Router pages and API route handlers
