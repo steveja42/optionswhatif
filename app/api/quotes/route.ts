@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getValidAccessToken } from '@/lib/schwab-tokens'
+import { mockOptionChain } from '@/lib/mock-data'
 
 // --- In-memory rate limiter ---
 // Keyed by IP, tracks request timestamps in a rolling 60-second window.
@@ -93,6 +94,11 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       )
     }
+  }
+
+  // Mock mode — set USE_MOCK_DATA=true in .env.local to skip Schwab entirely
+  if (process.env.USE_MOCK_DATA === 'true') {
+    return NextResponse.json(mockOptionChain)
   }
 
   // Get valid access token (server-side only)

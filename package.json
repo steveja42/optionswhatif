@@ -7,7 +7,9 @@
     "dev:netlify": "concurrently --kill-others \"netlify dev\" \"caddy reverse-proxy --from https://127.0.0.1:8080 --to http://127.0.0.1:8888 --internal-certs\"",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@netlify/blobs": "^10.7.0",
@@ -26,6 +28,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.2"
   }
 }

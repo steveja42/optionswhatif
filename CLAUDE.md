@@ -26,8 +26,7 @@ One-time setup per machine:
 
 Local OAuth flow: visit https://127.0.0.1:8080/api/auth/schwab/login — tokens are stored in the local Netlify Blobs store (separate from production).
 
-Note: after the Schwab callback the app may redirect to http://localhost:3000 (SSL error). This is harmless — tokens are already saved. Navigate manually to https://127.0.0.1:8080.
-
+Note: local and production Blobs stores are separate — OAuth done locally does NOT affect production tokens, and vice versa,except schwab does not seem to allow two separate refresh tokens.
 ## Project structure
 - `app/` — Next.js App Router pages and API route handlers
 - `components/` — React components (all 'use client' where needed)
