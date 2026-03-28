@@ -9,11 +9,11 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.optionswhatif.com'),
-  title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
+  title: 'Options Profit Calculator | OptionsWhatIf',
   description:
     'Analyze stock option ROI and profit with our interactive payoff matrix and strategic modeler. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
   openGraph: {
-    title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
+    title: 'Options Profit Calculator | OptionsWhatIf',
     description:
       'Analyze stock option ROI and profit with our interactive payoff matrix and strategic modeler. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
     url: 'https://www.optionswhatif.com',
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
+    title: 'Options Profit Calculator | OptionsWhatIf',
     description:
       'Analyze stock option ROI and profit with our interactive payoff matrix and strategic modeler. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
     images: ['/api/og'],
