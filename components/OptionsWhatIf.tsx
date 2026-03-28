@@ -181,10 +181,10 @@ export function OptionsWhatIf() {
     (sym: string) => {
       const upper = sym.toUpperCase()
       if (!upper) return
-      push({ symbol: upper })
+      push({ symbol: upper, strategy, type, buySell, strikeCount })
       // fetch will be triggered by the URL change effect above
     },
-    [push]
+    [push, strategy, type, buySell, strikeCount]
   )
 
   const handleSymbolBlur: React.FocusEventHandler<HTMLInputElement> = e => {
