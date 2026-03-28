@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 
-export async function GET(request: NextRequest) {
+async function forward(request: NextRequest) {
   const search = request.nextUrl.search
   const response = await fetch(`https://owi-next.goatcounter.com/count${search}`, {
     headers: {
@@ -9,4 +9,12 @@ export async function GET(request: NextRequest) {
     },
   })
   return new Response(null, { status: response.status })
+}
+
+export async function GET(request: NextRequest) {
+  return forward(request)
+}
+
+export async function POST(request: NextRequest) {
+  return forward(request)
 }
