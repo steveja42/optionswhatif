@@ -54,7 +54,7 @@ function strategyColor(strategy: string): string {
   return '#a78bfa'
 }
 
-function BrandedImage() {
+function BrandedImage({ tagline = 'Options Profit Calculator & ROI Visualizer' }: { tagline?: string }) {
   return (
     <div
       style={{
@@ -95,7 +95,7 @@ function BrandedImage() {
       </div>
       {/* Tagline */}
       <div style={{ display: 'flex', fontSize: 28, color: '#93c5fd', marginTop: 16 }}>
-        Options Profit Calculator &amp; ROI Visualizer
+        {tagline}
       </div>
       {/* Bottom accent bar */}
       <div
@@ -250,11 +250,14 @@ export async function GET(req: NextRequest) {
   const symbol   = searchParams.get('symbol')?.toUpperCase().slice(0, 5) ?? null
   const strategy = searchParams.get('strategy') ?? null
   const expiry   = searchParams.get('expiry') ?? null
+  const page     = searchParams.get('page') ?? null
 
   const hasParams = Boolean(symbol && strategy)
 
   const jsx = hasParams ? (
     <TickerImage symbol={symbol!} strategy={strategy!} expiry={expiry} />
+  ) : page === 'addon' ? (
+    <BrandedImage tagline="Google Sheets Add-on for Options Strategy Modeling" />
   ) : (
     <BrandedImage />
   )

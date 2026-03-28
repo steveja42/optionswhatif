@@ -22,7 +22,7 @@ export default function AboutWebApp() {
         Checking &ldquo;Auto Refresh&rdquo; will update the prices every second. The mid point of the bid/ask is used as the option price.
         Profit is based on intrinsic value.
       </p>
-      <Image src="/webappscreenshot.png" alt="screenshot of Web App" className="graphic" width={1200} height={900} style={{ width: '100%', height: 'auto' }} />
+      <Image src="/options-payoff-matrix-web-app.png" alt="Screenshot of OptionsWhatIf web app showing the options payoff matrix" className="graphic" width={1200} height={900} style={{ width: '100%', height: 'auto' }} />
     </div>
   )
 }

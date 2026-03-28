@@ -24,12 +24,6 @@ export function Navbar() {
         </Link>
         <div className="navbar-nav">
           <Link
-            href="/about"
-            className={`nav-link${pathname === '/about' ? ' navselected' : ''}`}
-          >
-            About
-          </Link>
-          <Link
             href="/aboutaddon"
             className={`nav-link${pathname === '/aboutaddon' ? ' navselected' : ''}`}
           >

@@ -9,11 +9,11 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://www.optionswhatif.com'),
   title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
   description:
-    'Analyze stock option ROI and profit with our interactive visualizer. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
+    'Analyze stock option ROI and profit with our interactive payoff matrix and strategic modeler. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
   openGraph: {
     title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
     description:
-      'Analyze stock option ROI and profit with our interactive visualizer. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
+      'Analyze stock option ROI and profit with our interactive payoff matrix and strategic modeler. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
     url: 'https://www.optionswhatif.com',
     siteName: 'OptionsWhatIf',
     images: [
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Options Profit Calculator & ROI Visualizer | OptionsWhatIf',
     description:
-      'Analyze stock option ROI and profit with our interactive visualizer. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
+      'Analyze stock option ROI and profit with our interactive payoff matrix and strategic modeler. A free tool for traders to model Puts, Calls, and Straddles before they trade.',
     images: ['/api/og'],
   },
 }
@@ -53,7 +53,10 @@ const schemaMarkup = {
     'Real-time Options Profit Visualization',
     'Strategy Modeling for Straddles, Puts, and Calls',
     'ROI Probability Calculator',
-    'Google Sheets Integration'
+    'Google Sheets Integration',
+    'Interactive 7-point ROI model',
+    'One-click Google Sheets programmatic generation',
+    'Live bid/ask mid-point price integration'
   ],
   'author': {
     '@type': 'Organization',
@@ -84,7 +87,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="App">
           <Navbar />
-          {children}
+          <main>{children}</main>
         </div>
       </body>
     </html>
