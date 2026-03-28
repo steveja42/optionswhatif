@@ -182,11 +182,25 @@ export function OptionsWhatIf() {
 
   // Uncontrolled local value for the symbol input so typing doesn't immediately push to URL
   const [symbolInput, setSymbolInput] = useState(symbol)
+  const symbolInputRef = useRef<HTMLInputElement>(null)
 
   // Sync input when URL symbol changes (back/forward)
   useEffect(() => {
     setSymbolInput(symbol)
   }, [symbol])
+
+  // Native 'change' fires when browser autocomplete selects a value (not on every keystroke).
+  // This lets autocomplete selections trigger a full symbol lookup.
+  useEffect(() => {
+    const el = symbolInputRef.current
+    if (!el) return
+    const onNativeChange = (e: Event) => {
+      const val = (e.target as HTMLInputElement).value
+      if (val) changeSymbol(val)
+    }
+    el.addEventListener('change', onNativeChange)
+    return () => el.removeEventListener('change', onNativeChange)
+  }, [changeSymbol])
 
   const handleSymbolChange: React.ChangeEventHandler<HTMLInputElement> = e => {
     setSymbolInput(e.target.value)
@@ -257,6 +271,7 @@ export function OptionsWhatIf() {
           <div className="form-group">
             <label>Stock Symbol</label>
             <input
+              ref={symbolInputRef}
               name="symbol"
               type="text"
               value={symbolInput}
