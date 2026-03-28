@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Suspense } from 'react'
 import { Navbar } from '@/components/Navbar'
+import { Analytics } from '@/components/Analytics'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -90,6 +92,9 @@ export default function RootLayout({
           <Navbar />
           <main>{children}</main>
         </div>
+        <Suspense>
+          <Analytics />
+        </Suspense>
       </body>
     </html>
   )
