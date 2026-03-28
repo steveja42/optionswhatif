@@ -7,6 +7,12 @@ export const metadata: Metadata = {
 
 export default function FeedbackPage() {
   return (
+    <>
+      <script
+        src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit"
+        async
+        defer
+      />
     <div className="container">
       <div className="row" style={{ alignItems: 'flex-start' }}>
         <div className="col">
@@ -17,5 +23,6 @@ export default function FeedbackPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }
