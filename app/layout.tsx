@@ -76,6 +76,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}
         />
+        <script dangerouslySetInnerHTML={{ __html: `window.goatcounter={endpoint:'/api/c'}` }} />
+        <script async src="/api/s" />
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
