@@ -14,6 +14,17 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       }
+    },
+     {
+      "name": "Next.js: Full Stack2",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev",
+      "serverReadyAction": {
+        "pattern": "- Local: +(.+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome"
+      }
     }
     ]
 }
