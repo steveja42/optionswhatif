@@ -137,6 +137,21 @@ export function OptionsWhatIf() {
     }
   }, [datesSelected])
 
+  // When symbol is cleared (e.g. logo click resets to /), clear all local state
+  useEffect(() => {
+    if (!symbol) {
+      if (timerID.current) clearInterval(timerID.current)
+      timerID.current = 0
+      lastFetchedSymbol.current = ''
+      lastFetchedStrikeCount.current = 0
+      setData(null)
+      setDateOptions(null)
+      setDatesSelected([])
+      setShowSuccess(false)
+      setShowFailure(undefined)
+    }
+  }, [symbol])
+
   // When URL symbol or strikeCount changes (including back/forward), fetch data
   useEffect(() => {
     if (

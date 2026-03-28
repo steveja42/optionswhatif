@@ -12,6 +12,11 @@ export function Navbar() {
     if (e.ctrlKey) {
       e.preventDefault()
       router.push('/owiadmin')
+      return
+    }
+    if (pathname === '/') {
+      e.preventDefault()
+      router.push('/')
     }
   }
 
