@@ -33,9 +33,25 @@ export async function saveTokens(tokens: SchwabTokens): Promise<void> {
 
 /**
  * Returns a valid Schwab access token, refreshing if needed.
+ * In local dev, if TOKEN_RELAY_SECRET is set, fetches from production instead of local Blobs.
  * Throws if refresh fails (caller should return 401).
  */
 export async function getValidAccessToken(): Promise<string> {
+  const relaySecret = process.env.TOKEN_RELAY_SECRET
+  const productionUrl = process.env.PRODUCTION_URL
+
+  if (process.env.NODE_ENV === 'development' && relaySecret && productionUrl) {
+    const response = await fetch(`${productionUrl}/api/auth/schwab/tokens`, {
+      headers: { Authorization: `Bearer ${relaySecret}` },
+    })
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error(`Token relay failed (${response.status}): ${text}`)
+    }
+    const data = await response.json()
+    return data.access_token
+  }
+
   const tokens = await getTokens()
 
   if (!tokens) {
