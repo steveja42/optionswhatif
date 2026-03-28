@@ -147,8 +147,22 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       )
     }
+    let errorMessage = `Schwab API error: ${schwabResponse.status}`
+    try {
+      const errBody = await schwabResponse.json()
+      if (errBody?.errors?.[0]?.detail) {
+        const e = errBody.errors[0]
+        errorMessage = e.source?.parameter
+          ? `${e.detail}: ${e.source.parameter}`
+          : e.detail
+      } else if (errBody?.message) {
+        errorMessage = errBody.message
+      } else if (typeof errBody === 'string') {
+        errorMessage = errBody
+      }
+    } catch {}
     return NextResponse.json(
-      { error: `Schwab API error: ${schwabResponse.status}` },
+      { error: errorMessage },
       { status: schwabResponse.status >= 500 ? 502 : schwabResponse.status }
     )
   }
