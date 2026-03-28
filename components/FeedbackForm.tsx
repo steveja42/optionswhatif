@@ -105,7 +105,7 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
 
         {this.state.showSuccess && (
           <div className="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Thank you!</strong> Your {this.state.type} was submitted.
+            <strong>Thank you!</strong> Your {this.state.type} feedback was submitted.
             <button type="button" className="btn-close" onClick={() => this.setState({ showSuccess: false })} aria-label="Close" />
           </div>
         )}
@@ -123,6 +123,7 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
               <option value="bug report">Bug report</option>
               <option value="feature request">Feature request</option>
               <option value="testimonial">Testimonial</option>
+              <option value="other">Other</option>
             </select>
           </div>
 
