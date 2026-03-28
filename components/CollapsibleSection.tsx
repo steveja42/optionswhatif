@@ -13,7 +13,7 @@ interface CollapsibleSectionProps {
 export function CollapsibleSection({
   title,
   headingTag: Tag = 'h2',
-  headingClassName = 'h4 mb-0',
+  headingClassName = 'h5 mb-0',
   children,
   defaultOpen = false,
 }: CollapsibleSectionProps) {

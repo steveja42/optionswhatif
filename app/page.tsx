@@ -16,13 +16,10 @@ export default function Home() {
       <h1 className="visually-hidden">OptionsWhatIf — Options Payoff Matrix &amp; ROI Modeler</h1>
       <OptionsWhatIf />
 
-      <hr style={{ borderTop: 'none', borderBottom: '2px solid black', background: 'black', color: 'black', margin: 0 }} />
-      <div style={{ background: '#f0f4f8', minHeight: '100vh' }}>
-        <div className="container pt-3 pb-5">
-        <div className="text-center mb-3">
-          <Link href="/aboutaddon" className="btn btn-outline-primary">Want to save this model? Get the Google Sheets Add-on</Link>
-        </div>
-
+      <hr style={{ border: 'none', borderTop: '1px solid #ccc', margin: 0 }} />
+      <div style={{ background: '#e2e8f0', minHeight: '100vh' }}>
+        <div className="pt-3 pb-5" style={{ marginLeft: '8px' }}>
+        <div className="d-flex flex-column gap-4 mt-2">
         <CollapsibleSection title="How It Works">
           <div className="row g-4 mb-5">
             <div className="col-md-6">
@@ -69,8 +66,7 @@ export default function Home() {
           />
         </CollapsibleSection>
 
-        <div className="mt-4">
-          <CollapsibleSection title="Web App vs. Google Sheets Add-on">
+        <CollapsibleSection title="Web App vs. Google Sheets Add-on">
             <p className="text-muted mb-4">
               Need to save your analysis or work across multiple sessions?{' '}
               <Link href="/aboutaddon">OptionsWhatIf Google Sheets Add-on</Link> creates a permanent tab in your
