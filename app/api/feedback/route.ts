@@ -12,18 +12,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 })
   }
 
-  // Determine source from Referer header, overriding whatever the client sent
+  // Determine source from ?source= query param, falling back to Referer header
+  const url = new URL(request.url)
+  const sourceParam = url.searchParams.get('source')
   const referer = request.headers.get('referer') ?? ''
-  if (referer.includes('google.com') || referer.includes('script.googleusercontent.com')) {
-    body.source = 'googleSheetsAddOn'
-  } 
-  console.log(`referer: ${referer}, determined source: ${body.source}`)
-
+  if (sourceParam) {
+    body.source = sourceParam
+  } else {
+    body.source = 'OptionsWhatIf-Nextjs' 
+  }
+  console.log(`referer: ${referer}, source param: ${sourceParam}, determined source: ${body.source}`)
+  body.grecaptchaResponse = ''
   // Log server-side (visible in Netlify function logs)
   console.log('[feedback]', JSON.stringify(body))
   const subject = `${body.source} ${body.type} from ${body.name}`
-  const text = `${body.type} regarding ${body.source} from ${body.name} - ${body.email}\n${body.feedback}\n` + JSON.stringify(body)
-  body.grecaptchaResponse = ''
+  const text = `${body.type} regarding ${body.source} from ${body.name} - ${body.email}\n${body.feedback}\n\n` + JSON.stringify(body)
+ 
   try {
     await sendMail(subject, text, body.email)
   } catch (err) {
