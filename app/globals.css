@@ -1,5 +1,58 @@
 @import "tailwindcss";
 
+/* ---- CSS custom properties (theme tokens) ---- */
+:root {
+  --color-bg:                  #ffffff;
+  --color-surface:             #ffffff;
+  --color-surface-alt:         #f5f5f5;
+  --color-border:              #e0e0e0;
+  --color-border-strong:       #000000;
+  --color-border-muted:        #cccccc;
+  --color-text:                #000000;
+  --color-text-muted:          #555555;
+  --color-text-faint:          #888888;
+  --color-text-title:          #1a1a2e;
+  --color-toggle-bg:           #555555;
+  --color-toggle-border:       #3a3a3a;
+  --color-toggle-inactive-border: #9bbde0;
+  --color-toggle-active:       #ffffff;
+  --color-toggle-active-border: #aaaaaa;
+  --color-form-grad-start:     rgb(7, 106, 255);
+  --color-form-grad-end:       rgb(199, 225, 255);
+  --color-page-lower-bg:       #e2e8f0;
+  --color-hr:                  #cccccc;
+  --color-donate-addr-bg:      #f5f5f5;
+  --color-copy-btn-border:     #bbbbbb;
+  --color-copy-btn-hover:      #e8e8e8;
+  --color-divider-line:        #dddddd;
+}
+
+[data-theme="dark"] {
+  --color-bg:                  #0f172a;
+  --color-surface:             #1e293b;
+  --color-surface-alt:         #334155;
+  --color-border:              #334155;
+  --color-border-strong:       #64748b;
+  --color-border-muted:        #475569;
+  --color-text:                #f1f5f9;
+  --color-text-muted:          #94a3b8;
+  --color-text-faint:          #64748b;
+  --color-text-title:          #e2e8f0;
+  --color-toggle-bg:           #334155;
+  --color-toggle-border:       #475569;
+  --color-toggle-inactive-border: #475569;
+  --color-toggle-active:       #10b981;
+  --color-toggle-active-border: #059669;
+  --color-form-grad-start:     #0f172a;
+  --color-form-grad-end:       #1e293b;
+  --color-page-lower-bg:       #0f172a;
+  --color-hr:                  #334155;
+  --color-donate-addr-bg:      #334155;
+  --color-copy-btn-border:     #475569;
+  --color-copy-btn-hover:      #475569;
+  --color-divider-line:        #475569;
+}
+
 /* ---- Body defaults (from original index.css) ---- */
 body {
   margin: 0;
@@ -8,6 +61,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 code {
@@ -17,15 +72,15 @@ code {
 /* ---- Original app.css styles ---- */
 
 .mytb.mytb:not(:disabled) label.active {
-  background-color: white;
-  color: black;
-  border-color: #313510ea;
+  background-color: var(--color-toggle-active);
+  color: var(--color-text);
+  border-color: var(--color-toggle-border);
 }
 
 .mytb label {
   background: rgba(17, 22, 32, 0.795);
-  color: black;
-  border-color: #9bbde0;
+  color: var(--color-text);
+  border-color: var(--color-toggle-inactive-border);
   box-shadow: none;
 }
 
@@ -50,9 +105,9 @@ code {
   padding: 0.3rem 0.75rem;
   font-size: 0.85rem;
   font-weight: 500;
-  background: #555555 !important;
-  color: #000000 !important;
-  border: 1px solid #3a3a3a !important;
+  background: var(--color-toggle-bg) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-toggle-border) !important;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
   text-align: center;
@@ -70,9 +125,9 @@ code {
 }
 
 .toggle-switch-group .toggle-switch-btn.active {
-  background: #ffffff !important;
-  color: #000000 !important;
-  border-color: #aaaaaa !important;
+  background: var(--color-toggle-active) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-toggle-active-border) !important;
 }
 
 .toggle-switch-group.disabled .toggle-switch-btn {
@@ -83,8 +138,8 @@ code {
 
 /* ---- Feedback page ---- */
 .feedback-card {
-  background: #fff;
-  border: 1px solid #e0e0e0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.75rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
@@ -93,12 +148,12 @@ code {
   font-weight: 700;
   margin-bottom: 1.25rem;
   font-size: 1.15rem;
-  color: #1a1a2e;
+  color: var(--color-text-title);
 }
 
 .donate-card {
-  background: #fff;
-  border: 1px solid #e0e0e0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.07);
@@ -108,12 +163,12 @@ code {
 .donate-card-title {
   font-weight: 700;
   font-size: 1.05rem;
-  color: #1a1a2e;
+  color: var(--color-text-title);
   margin-bottom: 0.4rem;
 }
 .donate-card-subtitle {
   font-size: 0.85rem;
-  color: #555;
+  color: var(--color-text-muted);
   margin-bottom: 1.25rem;
 }
 .donate-method {
@@ -122,7 +177,7 @@ code {
 .donate-method-label {
   font-weight: 600;
   font-size: 0.9rem;
-  color: #333;
+  color: var(--color-text);
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
@@ -138,7 +193,7 @@ code {
 .donate-divider {
   text-align: center;
   font-size: 0.78rem;
-  color: #999;
+  color: var(--color-text-faint);
   margin: 1rem 0;
   position: relative;
 }
@@ -149,7 +204,7 @@ code {
   top: 50%;
   width: 28%;
   height: 1px;
-  background: #ddd;
+  background: var(--color-divider-line);
 }
 .donate-divider::before { left: 0; }
 .donate-divider::after  { right: 0; }
@@ -173,7 +228,7 @@ code {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  background: #f5f5f5;
+  background: var(--color-donate-addr-bg);
   border-radius: 6px;
   padding: 0.35rem 0.6rem;
   font-size: 0.78rem;
@@ -182,19 +237,19 @@ code {
 }
 .donate-copy-btn {
   background: none;
-  border: 1px solid #bbb;
+  border: 1px solid var(--color-copy-btn-border);
   border-radius: 4px;
   font-size: 0.7rem;
   padding: 0.1rem 0.4rem;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  color: #555;
+  color: var(--color-text-muted);
 }
-.donate-copy-btn:hover { background: #e8e8e8; }
+.donate-copy-btn:hover { background: var(--color-copy-btn-hover); }
 .donate-hint {
   font-size: 0.75rem;
-  color: #888;
+  color: var(--color-text-faint);
 }
 
 table {
@@ -207,25 +262,25 @@ table {
 }
 
 .stocktable .sectionborder {
-  border-right: 1px solid black;
+  border-right: 1px solid var(--color-border-strong);
 }
 .stocktable .leftborder {
-  border-left: 1px solid black;
+  border-left: 1px solid var(--color-border-strong);
   padding-left: 0.75rem;
 }
 .stocktable .noborder {
   border: none;
 }
 .stocktable .colborder {
-  border-left: 1px solid black;
-  border-right: 1px solid black;
+  border-left: 1px solid var(--color-border-strong);
+  border-right: 1px solid var(--color-border-strong);
 }
 .stocktable thead:nth-of-type(2) th,
 .stocktable thead:nth-of-type(3) th {
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid var(--color-border-muted);
 }
 .stocktable tbody tr:nth-child(odd) {
-  background-color: #f5f5f5;
+  background-color: var(--color-surface-alt);
 }
 .stocktable thead:nth-of-type(3) th:nth-child(n+2):nth-child(-n+6),
 .stocktable tbody td:nth-child(n+2):nth-child(-n+6) {
@@ -245,6 +300,8 @@ h2 span {
 th input {
   width: 5em;
   border: none;
+  background: transparent;
+  color: var(--color-text);
 }
 .graphic {
   display: block;
@@ -261,7 +318,7 @@ th input {
 }
 .stockform {
   border-bottom: 1px solid;
-  background: linear-gradient(90deg, rgb(7, 106, 255) 0%, rgb(199, 225, 255) 100%);
+  background: linear-gradient(90deg, var(--color-form-grad-start) 0%, var(--color-form-grad-end) 100%);
   padding: 8px;
 }
 
@@ -273,6 +330,34 @@ th input {
 .pp {
   width: 5em;
   border: none;
+  background: transparent;
+  color: var(--color-text);
+}
+
+/* Page layout utility classes */
+.page-divider {
+  border: none;
+  border-top: 1px solid var(--color-hr);
+  margin: 0;
+}
+.page-lower-section {
+  background: var(--color-page-lower-bg);
+  min-height: 100vh;
+}
+
+/* Dark mode: override Bootstrap's table variables so row colors work correctly */
+[data-theme="dark"] .stocktable {
+  --bs-table-bg: #1e293b;
+  --bs-table-color: #f1f5f9;
+  --bs-table-border-color: #64748b;
+}
+[data-theme="dark"] .stocktable tbody tr:nth-child(odd) td {
+  --bs-table-bg: #334155;
+  background-color: #334155;
+}
+[data-theme="dark"] .stocktable tbody tr:nth-child(even) td {
+  --bs-table-bg: #1e293b;
+  background-color: #1e293b;
 }
 
 /* Bootstrap 5 CDN is loaded via the layout <link> tag.

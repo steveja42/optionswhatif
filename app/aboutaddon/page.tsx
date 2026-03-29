@@ -25,7 +25,7 @@ export default function AboutSheetsAddon() {
 
       <div className="row g-4 mb-5">
         <div className="col-md-6">
-          <div className="card h-100 border-0 bg-light p-4">
+          <div className="card h-100 border-0 bg-body-secondary p-4">
             <h2 className="h5 mb-2">Permanent Strategy Generator</h2>
             <p className="mb-0">
               Unlike the web app — which resets on every page load — the add-on inserts a{' '}
@@ -36,7 +36,7 @@ export default function AboutSheetsAddon() {
           </div>
         </div>
         <div className="col-md-6">
-          <div className="card h-100 border-0 bg-light p-4">
+          <div className="card h-100 border-0 bg-body-secondary p-4">
             <h2 className="h5 mb-2">&ldquo;Update Prices&rdquo; Button</h2>
             <p className="mb-0">
               Refresh market data for any saved sheet with a single click of the{' '}
@@ -46,7 +46,7 @@ export default function AboutSheetsAddon() {
           </div>
         </div>
         <div className="col-md-6">
-          <div className="card h-100 border-0 bg-light p-4">
+          <div className="card h-100 border-0 bg-body-secondary p-4">
             <h2 className="h5 mb-2">Data Privacy</h2>
             <p className="mb-0">
               The add-on builds your options sheet <strong>locally inside Google Sheets</strong>.
@@ -56,7 +56,7 @@ export default function AboutSheetsAddon() {
           </div>
         </div>
         <div className="col-md-6">
-          <div className="card h-100 border-0 bg-light p-4">
+          <div className="card h-100 border-0 bg-body-secondary p-4">
             <h2 className="h5 mb-2">Full Sheets Customization</h2>
             <p className="mb-0">
               Once generated, the sheet is plain spreadsheet data. Add your own formulas,

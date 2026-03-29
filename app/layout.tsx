@@ -37,6 +37,8 @@ export const metadata: Metadata = {
   },
 }
 
+const themeInitScript = `try{var t=localStorage.getItem('theme'),d=window.matchMedia('(prefers-color-scheme:dark)').matches,m=t==='dark'||t==='light'?t:(d?'dark':'light');document.documentElement.setAttribute('data-theme',m);document.documentElement.setAttribute('data-bs-theme',m)}catch(e){}`
+
 const schemaMarkup = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
@@ -72,8 +74,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaMarkup) }}

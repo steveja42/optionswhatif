@@ -16,8 +16,8 @@ export default function Home() {
       <h1 className="visually-hidden">OptionsWhatIf — Options Payoff Matrix &amp; ROI Modeler</h1>
       <OptionsWhatIf />
 
-      <hr style={{ border: 'none', borderTop: '1px solid #ccc', margin: 0 }} />
-      <div style={{ background: '#e2e8f0', minHeight: '100vh' }}>
+      <hr className="page-divider" />
+      <div className="page-lower-section">
         <div className="pt-3 pb-5" style={{ marginLeft: '8px' }}>
         <div className="d-flex flex-column gap-4 mt-2">
         <CollapsibleSection title="How It Works">
