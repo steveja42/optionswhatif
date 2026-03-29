@@ -15,7 +15,7 @@ interface OptionExpirationProps {
 
 const coreHeaders = ['Strike', 'Bid', 'Ask', 'Last', 'Price', 'Breakeven']
 const straddleHeaders = ['Bid', 'Ask', 'Vol', 'Breakeven', 'Strike', 'Bid', 'Ask', 'Price', 'Bid', 'Ask', 'Vol', 'Breakeven']
-const profitHeaders = ['Profit', 'ROI', 'Profit', 'ROI', 'Profit', 'ROI', 'Profit', 'ROI', 'Profit', 'ROI', 'Profit', 'ROI', 'Profit', 'ROI']
+const profitHeaders = ['Profit', 'ROI', 'Profit', 'ROI', 'Profit', 'ROI', 'Profit', 'ROI', 'Profit', 'ROI', 'Profit', 'ROI']
 const ppStraddleHeaders = ['Puts', '', '', '', '', 'Straddle', '', '', 'Calls', '', '', '']
 const ppSingleHeaders = ['', '', '', '', '', '']
 

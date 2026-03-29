@@ -3,7 +3,7 @@
 
 export type ComboType = 'PUT' | 'CALL' | 'straddle'
 
-export const pricePointPercentages = [0, 0.1, 0.33, 0.5, 0.66, 0.9, 1]
+export const pricePointPercentages = [0.1, 0.33, 0.5, 0.66, 0.9, 1]
 
 /**
  * Returns the profit at a price point.
