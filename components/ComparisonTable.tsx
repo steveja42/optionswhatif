@@ -21,11 +21,6 @@ export function ComparisonTable() {
             <td>Permanent tab in your spreadsheet</td>
           </tr>
           <tr>
-            <td className="text-start fw-semibold">Price points</td>
-            <td>7-point snapshot (editable)</td>
-            <td>6-point snapshot (editable)</td>
-          </tr>
-          <tr>
             <td className="text-start fw-semibold">Customization</td>
             <td>Edit price points in-browser</td>
             <td>Full Sheets formula customization</td>
