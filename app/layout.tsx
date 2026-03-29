@@ -56,7 +56,7 @@ const schemaMarkup = {
     'Strategy Modeling for Straddles, Puts, and Calls',
     'ROI Probability Calculator',
     'Google Sheets Integration',
-    'Interactive 7-point ROI model',
+    'Interactive 6-point ROI model',
     'One-click Google Sheets programmatic generation',
     'Live bid/ask mid-point price integration'
   ],

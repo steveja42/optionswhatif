@@ -7,7 +7,7 @@ import { CollapsibleSection } from '@/components/CollapsibleSection'
 
 export const metadata: Metadata = {
   title: 'OptionsWhatIf | Instant Online Options Payoff Matrix & ROI Modeler',
-  description: 'Instantly calculate potential profit and ROI for options trading. A zero-formula web modeler with 7-point price scenarios, auto-refresh quotes, and intrinsic value analysis.',
+  description: 'Instantly calculate potential profit and ROI for options trading. A zero-formula web modeler with 6-point price scenarios, auto-refresh quotes, and intrinsic value analysis.',
   keywords: ['options payoff matrix', 'options profit calculator', 'options ROI model', 'stock option analysis tool'],
 }
 export default function Home() {
@@ -31,9 +31,9 @@ export default function Home() {
               </p>
             </div>
             <div className="col-md-6">
-              <h3 className="h6 text-uppercase text-muted mb-2">The 7-point ROI model</h3>
+              <h3 className="h6 text-uppercase text-muted mb-2">The 6-point ROI model</h3>
               <p>
-                Results are shown at price changes of <strong>0%, 10%, 33%, 50%, 66%, 90%, and 100%</strong>.
+                Results are shown at price changes of <strong>10%, 33%, 50%, 66%, 90%, and 100%</strong>.
                 Each price point is editable — click any value to enter a custom price and see
                 tailored outcomes for your specific trade thesis.
               </p>
