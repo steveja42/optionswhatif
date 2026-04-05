@@ -61,6 +61,14 @@ Provided automatically by Netlify runtime (do not add manually):
 - NETLIFY_SITE_ID
 - NETLIFY_TOKEN
 
+## Web analytics
+GoatCounter (site: `owi-next.goatcounter.com`) via a self-hosted proxy to avoid ad blockers:
+- `app/api/s/route.ts` — serves the `count.js` script (cached 24h), loaded in `app/layout.tsx` as `/api/s`
+- `app/api/c/route.ts` — proxies count hits to GoatCounter, preserving the visitor's IP via `X-Forwarded-For`
+- `app/layout.tsx` sets `window.goatcounter = { endpoint: '/api/c' }` so the script uses the proxy
+- `components/Analytics.tsx` fires a count on client-side SPA navigation (first render is skipped; count.js handles that)
+- For server-side events (e.g. login route), call `https://owi-next.goatcounter.com/count` directly as a GET with `?p=<path>&t=<title>`, passing `X-Forwarded-For` and `User-Agent` headers from the original request
+
 ## Styling
 Bootstrap 5 via CDN (loaded in app/layout.tsx). Custom overrides in app/globals.css. Tailwind is available but Bootstrap is the primary CSS framework here.
 
