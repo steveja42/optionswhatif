@@ -342,16 +342,35 @@ th input {
   padding: 8px;
 }
 
-/* Pulsing label prompting the user to fill in the next calculator field */
+/* Pulsing label prompting the user to fill in the next calculator field.
+   The text pulses between its normal color and bright yellow. The yellow gets a dark
+   halo so it stays readable on every part of the blue form gradient, from the deep
+   blue left edge (where labels stack on narrow screens) to the pale right side. */
 .label-pulse {
+  --pulse-text: #000000;
+  --pulse-hot: #ffe14d;
+  --pulse-halo: rgba(0, 0, 0, 0.85);
   display: inline-block;
-  color: var(--color-accent);
+  align-self: flex-start;
   font-weight: 600;
-  animation: label-pulse 1.4s ease-in-out infinite;
+  transform-origin: left center;
+  animation: label-pulse 0.9s ease-in-out infinite alternate;
+}
+[data-theme="dark"] .label-pulse {
+  --pulse-text: #f1f5f9;
+  --pulse-hot: #fbbf24;
 }
 @keyframes label-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(1.06); }
+  from {
+    color: var(--pulse-text);
+    text-shadow: none;
+    transform: scale(1);
+  }
+  to {
+    color: var(--pulse-hot);
+    text-shadow: 0 0 2px var(--pulse-halo), 0 0 6px var(--pulse-halo);
+    transform: scale(1.06);
+  }
 }
 
 /* Mobile menu (below Bootstrap's sm breakpoint) */
@@ -686,7 +705,11 @@ th input {
   .section-nav-link,
   .faq-item summary::after { transition: none; }
   .feature-card:hover { transform: none; }
-  .label-pulse { animation: none; }
+  .label-pulse {
+    animation: none;
+    color: var(--pulse-hot);
+    text-shadow: 0 0 2px var(--pulse-halo), 0 0 6px var(--pulse-halo);
+  }
 }
 
 @media (max-width: 575.98px) {
