@@ -1,0 +1,5 @@
+# Use LF line endings in the repo and the working tree on every OS
+* text=auto eol=lf
+
+# Windows batch files need CRLF to run reliably under cmd.exe
+*.{bat,cmd} text eol=crlf
