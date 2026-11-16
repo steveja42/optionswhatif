@@ -7,6 +7,7 @@ declare global {
     grecaptcha: {
       render: (id: string, opts: { sitekey: string }) => void
       getResponse: () => string
+      reset: () => void
     }
     onRecaptchaLoad: () => void
   }
@@ -19,6 +20,7 @@ interface FeedbackState {
   name: string
   email: string
   feedback: string
+  website: string
   showSuccess: boolean
   showFailure: string | false
   isLoading: boolean
@@ -30,6 +32,7 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
     name: '',
     email: '',
     feedback: '',
+    website: '',
     showSuccess: false,
     showFailure: false,
     isLoading: false,
@@ -64,7 +67,11 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
   handleSubmit = async (event: React.SyntheticEvent) => {
     event.preventDefault()
     const grecaptchaResponse = window.grecaptcha?.getResponse() ?? ''
-    this.setState({ isLoading: true })
+    if (!grecaptchaResponse) {
+      this.setState({ showFailure: 'Please complete the reCAPTCHA check.', showSuccess: false })
+      return
+    }
+    this.setState({ isLoading: true, showFailure: false })
 
     const data = {
       source: 'optionsWhatIf',
@@ -72,6 +79,7 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
       name: this.state.name,
       email: this.state.email,
       feedback: this.state.feedback,
+      website: this.state.website,
       grecaptchaResponse,
     }
 
@@ -82,10 +90,14 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
         body: JSON.stringify(data),
       })
       if (response.ok) {
-        this.setState({ showFailure: false, showSuccess: true })
+        this.setState({ showFailure: false, showSuccess: true, feedback: '' })
       } else {
-        const text = await response.text()
-        this.setState({ showFailure: `Error: ${response.status} ${text}`, showSuccess: false })
+        let message = `Error ${response.status}`
+        try {
+          const json = await response.json() as { error?: string }
+          if (json.error) message = json.error
+        } catch { /* non-JSON response */ }
+        this.setState({ showFailure: message, showSuccess: false })
       }
     } catch (err) {
       this.setState({
@@ -93,6 +105,7 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
         showSuccess: false,
       })
     } finally {
+      window.grecaptcha?.reset()
       this.setState({ isLoading: false })
     }
   }
@@ -141,6 +154,12 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
           <div className="mb-3">
             <label className="form-label fw-semibold">Message</label>
             <textarea name="feedback" value={this.state.feedback} onChange={this.handleChange} className="form-control" rows={4} placeholder="Tell us what you think…" required />
+          </div>
+
+          {/* Honeypot: hidden from people, bots tend to fill it */}
+          <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+            <label htmlFor="website">Website</label>
+            <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" value={this.state.website} onChange={this.handleChange} />
           </div>
 
           <div id="recaptcha" className="mb-3" data-sitekey={sitekey} />

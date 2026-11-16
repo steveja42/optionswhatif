@@ -53,6 +53,7 @@ Server-side only (never NEXT_PUBLIC_):
 - SCHWAB_API_KEY
 - SCHWAB_API_SECRET
 - SCHWAB_REDIRECT_URI
+- GOOGLE_RECAPTCHA_SECRET_KEY — reCAPTCHA v2 secret, verified in app/api/feedback/route.ts. If missing, all feedback submissions are rejected.
 
 Public (safe to expose):
 - NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY
