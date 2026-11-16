@@ -1,15 +1,34 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { ThemeToggle } from './ThemeToggle'
 
+const NAV_LINKS = [
+  { href: '/calculator', label: 'Calculator' },
+  { href: '/aboutaddon', label: 'Sheets Add-On' },
+  { href: '/feedback', label: 'Give Feedback' },
+]
+
 export function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  // Close the mobile menu with Escape.
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   function handleLogoClick(e: React.MouseEvent) {
+    setMenuOpen(false)
     if (e.ctrlKey) {
       e.preventDefault()
       router.push('/owiadmin')
@@ -23,28 +42,37 @@ export function Navbar() {
           <Image src="/logo100.png" width={0} height={0} sizes="56px" style={{width: 'auto', height: '100%', marginRight: '8px'}} className="d-inline-block" alt="" />
           OptionsWhatIf
         </Link>
-        <div className="navbar-nav">
-          <Link
-            href="/calculator"
-            className={`nav-link${pathname === '/calculator' ? ' navselected' : ''}`}
-          >
-            Calculator
-          </Link>
-          <Link
-            href="/aboutaddon"
-            className={`nav-link${pathname === '/aboutaddon' ? ' navselected' : ''}`}
-          >
-            Sheets Add-On
-          </Link>
-          <Link
-            href="/feedback"
-            className={`nav-link${pathname === '/feedback' ? ' navselected' : ''}`}
-          >
-            Give Feedback
-          </Link>
-        </div>
-        <div className="ms-auto d-flex align-items-center pe-2">
+
+        {/* Theme toggle and (on mobile) the menu button. Sits at the far right at every width. */}
+        <div className="ms-auto order-sm-last d-flex align-items-center gap-2 pe-2">
           <ThemeToggle />
+          <button
+            type="button"
+            className="navbar-toggler"
+            aria-controls="main-nav"
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setMenuOpen(o => !o)}
+          >
+            <span className="navbar-toggler-icon" />
+          </button>
+        </div>
+
+        {/* Not using Bootstrap's "collapse" class: Tailwind's .collapse (visibility: collapse) clashes with it. */}
+        <div id="main-nav" className={`navbar-collapse${menuOpen ? ' show' : ''}`}>
+          <div className="navbar-nav">
+            {NAV_LINKS.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`nav-link${pathname === href ? ' navselected' : ''}`}
+                aria-current={pathname === href ? 'page' : undefined}
+                onClick={() => setMenuOpen(false)}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
         </div>
       </nav>
     </header>

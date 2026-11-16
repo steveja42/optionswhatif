@@ -342,7 +342,29 @@ th input {
   padding: 8px;
 }
 
-.navselected {
+/* Mobile menu (below Bootstrap's sm breakpoint) */
+.navbar .navbar-toggler {
+  padding: 0.3rem 0.5rem;
+  border-color: var(--color-border);
+}
+.navbar .navbar-toggler:focus {
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+@media (max-width: 575.98px) {
+  .navbar .navbar-collapse:not(.show) {
+    display: none;
+  }
+  .navbar .navbar-collapse .navbar-nav {
+    padding: 0.25rem 0 0.5rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .navbar .navbar-collapse .nav-link {
+    padding: 0.7rem 16px;
+  }
+}
+
+/* Extra specificity: Bootstrap's .nav-link loads later and would otherwise win. */
+.navbar .nav-link.navselected {
   font-weight: bold;
   text-decoration: underline;
 }
