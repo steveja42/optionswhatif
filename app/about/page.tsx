@@ -13,7 +13,7 @@ export default function AboutWebApp() {
       <p>A stock option tool for investors and speculators that shows possible outcomes for the stock options you select.</p>
       <p>It can help guide your investment decisions by showing the potential stock option profit and ROI at various price points.</p>
       <p>
-        The OptionsWhatIf Web App can be found <Link href="/">here</Link>.
+        The OptionsWhatIf Web App can be found <Link href="/calculator">here</Link>.
       </p>
       <p>
         Enter a stock symbol (US markets) and choose the desired option expiration dates and the page will show

@@ -104,7 +104,7 @@ export default function AboutSheetsAddon() {
       <h2 className="h5 mb-3">Add-on vs. Web App</h2>
       <p className="text-muted mb-4">
         Want a quick, no-install snapshot instead?{' '}
-        <Link href="/">The web app</Link> runs in your browser with Auto-Refresh and zero setup.
+        <Link href="/calculator">The web app</Link> runs in your browser with Auto-Refresh and zero setup.
       </p>
       <ComparisonTable />
     </div>
