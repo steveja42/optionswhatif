@@ -1,3 +1,6 @@
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+overrides:
+  # 7.1+ adds stricter React Compiler rules that flag OptionsWhatIf.tsx and owiadmin/page.tsx; remove once those are refactored
+  eslint-plugin-react-hooks: 7.0.1
