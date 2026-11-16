@@ -55,7 +55,8 @@ export async function GET(request: NextRequest) {
   }
 
   const data = await response.json()
-  await saveTokens({ ...data, issued_at: Date.now() })
+  const now = Date.now()
+  await saveTokens({ ...data, issued_at: now, refresh_issued_at: now })
 
   const origin = redirectUri ? new URL(redirectUri).origin : new URL(request.url).origin
   return NextResponse.redirect(new URL('/', origin))

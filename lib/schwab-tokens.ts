@@ -6,14 +6,30 @@ const TOKEN_KEY = 'schwab-tokens'
 // 60-second buffer before expiry
 const EXPIRY_BUFFER_MS = 60_000
 
-interface SchwabTokens {
+export interface SchwabTokens {
   access_token: string
   refresh_token: string
   expires_in: number       // seconds
   token_type: string
   scope?: string
   id_token?: string
-  issued_at: number        // ms epoch — we store this ourselves
+  issued_at: number        // ms epoch when the current ACCESS token was issued — we store this ourselves
+  // ms epoch of the last interactive login (OAuth callback). Schwab's refresh token
+  // expires 7 days after this, no matter how many times the access token is refreshed.
+  // Optional only because tokens stored before this field existed don't have it.
+  refresh_issued_at?: number
+}
+
+// Schwab refresh tokens hard-expire 7 days after the interactive login
+export const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000
+
+/** When the last interactive login happened (falls back to issued_at for older stored tokens). */
+export function getRefreshIssuedAt(tokens: SchwabTokens): number {
+  return tokens.refresh_issued_at ?? tokens.issued_at
+}
+
+export function getRefreshTokenExpiresAt(tokens: SchwabTokens): number {
+  return getRefreshIssuedAt(tokens) + REFRESH_TOKEN_TTL_MS
 }
 
 function getTokenStore() {
@@ -67,7 +83,13 @@ export async function getValidAccessToken(): Promise<string> {
 
   // Token expired — refresh it
   const newTokens = await refreshAccessToken(tokens.refresh_token)
-  await saveTokens(newTokens)
+  await saveTokens({
+    ...newTokens,
+    // Keep the original login time and refresh token unless Schwab sent a new one
+    refresh_token: newTokens.refresh_token ?? tokens.refresh_token,
+    // Left undefined for older tokens so the admin page keeps flagging them until a re-login
+    refresh_issued_at: tokens.refresh_issued_at,
+  })
   return newTokens.access_token
 }
 

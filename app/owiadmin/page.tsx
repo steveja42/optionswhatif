@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 interface TokenStatus {
   status: 'ok' | 'refresh_expired' | 'no_tokens'
   issuedAt?: string
+  loginTimeKnown?: boolean
   accessToken?: {
     expiresAt: string
     expiresInSeconds: number
@@ -72,8 +73,15 @@ export default function AdminPage() {
 
           {status.issuedAt && (
             <p className="text-muted small mb-3">
-              Tokens issued: {new Date(status.issuedAt).toLocaleString()}
+              Last authorized: {new Date(status.issuedAt).toLocaleString()}
             </p>
+          )}
+
+          {status.loginTimeKnown === false && (
+            <div className="alert alert-info small">
+              These tokens were saved before login time was tracked, so the refresh-token expiry below may be
+              wrong. Re-authorize once to get an accurate countdown and on-time reminders.
+            </div>
           )}
 
           {access && (

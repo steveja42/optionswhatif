@@ -54,6 +54,10 @@ Server-side only (never NEXT_PUBLIC_):
 - SCHWAB_API_SECRET
 - SCHWAB_REDIRECT_URI
 - GOOGLE_RECAPTCHA_SECRET_KEY — reCAPTCHA v2 secret, verified in app/api/feedback/route.ts. If missing, all feedback submissions are rejected.
+- NTFY_TOPIC — ntfy.sh topic for phone alerts about Schwab token expiry (lib/notify.ts). If missing, alerts are skipped. NTFY_SERVER optionally overrides https://ntfy.sh.
+
+## Schwab token reminders
+netlify/functions/schwab-token-reminder.mts runs hourly (published deploys only) and calls lib/token-reminder.ts. It sends a phone alert 24h and 2h before the 7-day refresh token expires, when it has expired, and when a refresh fails early. Each alert is sent once per login (state is in Blobs store "auth", key "schwab-reminder-state"). The 7-day clock counts from `refresh_issued_at`, which only the OAuth callback sets.
 
 Public (safe to expose):
 - NEXT_PUBLIC_GOOGLE_RECAPTCHA_SITE_KEY

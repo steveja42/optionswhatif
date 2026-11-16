@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getTokens } from '@/lib/schwab-tokens'
+import { getTokens, getRefreshIssuedAt, getRefreshTokenExpiresAt } from '@/lib/schwab-tokens'
 
 export async function GET() {
   const tokens = await getTokens()
@@ -12,14 +12,15 @@ export async function GET() {
   const accessExpiresAt = tokens.issued_at + tokens.expires_in * 1000
   const accessExpiresIn = Math.floor((accessExpiresAt - now) / 1000)
 
-  // Schwab refresh tokens expire after 7 days
-  const REFRESH_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000
-  const refreshExpiresAt = tokens.issued_at + REFRESH_TOKEN_TTL_MS
+  // Refresh token expiry is based on the last interactive login, not the last access-token refresh
+  const refreshExpiresAt = getRefreshTokenExpiresAt(tokens)
   const refreshExpiresIn = Math.floor((refreshExpiresAt - now) / 1000)
 
   return NextResponse.json({
     status: refreshExpiresIn > 0 ? 'ok' : 'refresh_expired',
-    issuedAt: new Date(tokens.issued_at).toISOString(),
+    issuedAt: new Date(getRefreshIssuedAt(tokens)).toISOString(),
+    // false for tokens saved before login time was tracked — expiry shown may be too optimistic
+    loginTimeKnown: tokens.refresh_issued_at !== undefined,
     accessToken: {
       expiresAt: new Date(accessExpiresAt).toISOString(),
       expiresInSeconds: accessExpiresIn,
