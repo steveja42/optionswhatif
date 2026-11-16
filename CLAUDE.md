@@ -24,7 +24,7 @@ One-time setup per machine:
 
 `pnpm dev:netlify` starts both Netlify Dev and Caddy automatically. Both processes stop together on Ctrl+C.
 
-Local OAuth flow: visit https://127.0.0.1:8080/api/auth/schwab/login — tokens are stored in the local Netlify Blobs store (separate from production).
+Local OAuth flow: visit https://127.0.0.1:8080/api/admin/login — tokens are stored in the local Netlify Blobs store (separate from production).
 
 Note: local and production Blobs stores are separate — OAuth done locally does NOT affect production tokens, and vice versa,except schwab does not seem to allow two separate refresh tokens.
 ## Project structure
@@ -42,7 +42,7 @@ Note: local and production Blobs stores are separate — OAuth done locally does
 - Tokens are stored in Netlify Blobs (store: "auth", key: "schwab-tokens"). Never use localStorage for tokens.
 
 ## Schwab OAuth flow
-- Initial setup: visit /api/auth/schwab/login → Schwab login → callback → tokens stored in Blobs
+- Initial setup: visit /api/admin/login (admin password required) → Schwab login → callback (checks the OAuth `state` cookie set by login) → tokens stored in Blobs
 - Subsequent requests: getValidAccessToken() in lib/schwab-tokens.ts handles refresh automatically
 - Registered redirect URIs (Schwab developer portal):
   - https://www.optionswhatif.com/api/auth/schwab/callback
@@ -53,6 +53,8 @@ Server-side only (never NEXT_PUBLIC_):
 - SCHWAB_API_KEY
 - SCHWAB_API_SECRET
 - SCHWAB_REDIRECT_URI
+- ADMIN_PASSWORD — HTTP Basic auth password (any username) for /owiadmin's API calls and /api/admin/login (lib/admin-auth.ts). If missing, admin routes reject everyone.
+- TOKEN_RELAY_SECRET — optional, 32+ chars. Lets local dev borrow the production access token via /api/auth/schwab/tokens. Shorter or missing → route returns 404.
 - GOOGLE_RECAPTCHA_SECRET_KEY — reCAPTCHA v2 secret, verified in app/api/feedback/route.ts. If missing, all feedback submissions are rejected.
 - NTFY_TOPIC — ntfy.sh topic for phone alerts about Schwab token expiry (lib/notify.ts). If missing, alerts are skipped. NTFY_SERVER optionally overrides https://ntfy.sh.
 

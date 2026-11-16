@@ -22,7 +22,7 @@ This starts `netlify dev`, which provides the Netlify Blobs runtime locally. Use
 
 On first deploy to Netlify:
 
-1. Visit `/api/auth/schwab/login` in your browser.
+1. Visit `/api/admin/login` in your browser.
 2. You will be redirected to Schwab's authorization page — log in and approve access.
 3. Schwab redirects back to `/api/auth/schwab/callback`, which exchanges the code for tokens and stores them in Netlify Blobs.
 4. All subsequent token refreshes are handled automatically by the server — no manual steps needed.

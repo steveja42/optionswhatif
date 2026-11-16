@@ -47,7 +47,7 @@ export function formatTimeLeft(ms: number): string {
 
 function loginUrl(): string | undefined {
   const redirectUri = process.env.SCHWAB_REDIRECT_URI
-  return redirectUri ? `${new URL(redirectUri).origin}/api/auth/schwab/login` : undefined
+  return redirectUri ? `${new URL(redirectUri).origin}/api/admin/login` : undefined
 }
 
 function buildNotification(key: AlertKey, msLeft: number, detail?: string): PhoneNotification {

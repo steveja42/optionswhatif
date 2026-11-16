@@ -37,7 +37,8 @@ export default function AdminPage() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch('/api/auth/schwab/status')
+      const res = await fetch('/api/admin/status')
+      if (res.status === 401) throw new Error('Not signed in. Reload the page and enter the admin password.')
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       setStatus(await res.json())
     } catch (e) {
@@ -60,7 +61,7 @@ export default function AdminPage() {
 
   return (
     <div className="container py-5" style={{ maxWidth: 600 }}>
-      <h4 className="mb-4">Schwab Token Status</h4>
+      <h4 className="mb-4">Data Feed Status</h4>
 
       {loading && <p className="text-muted">Loading…</p>}
       {error && <div className="alert alert-danger">Error: {error}</div>}
@@ -122,10 +123,10 @@ export default function AdminPage() {
 
           <div className="d-flex gap-2">
             <a
-              href="/api/auth/schwab/login"
+              href="/api/admin/login"
               className={`btn btn-${needsReauth ? 'danger' : 'primary'}`}
             >
-              {needsReauth ? 'Re-authorize Now' : 'Re-authorize Schwab'}
+              {needsReauth ? 'Re-authorize Now' : 'Re-authorize'}
             </a>
             <button className="btn btn-outline-secondary" onClick={fetchStatus}>
               Refresh Status

@@ -71,7 +71,7 @@ export async function getValidAccessToken(): Promise<string> {
   const tokens = await getTokens()
 
   if (!tokens) {
-    throw new Error('No Schwab tokens stored. Complete OAuth setup at /api/auth/schwab/login')
+    throw new Error('No Schwab tokens stored. Complete OAuth setup at /api/admin/login')
   }
 
   const expiresAt = tokens.issued_at + tokens.expires_in * 1000

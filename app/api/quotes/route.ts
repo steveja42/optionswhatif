@@ -15,6 +15,12 @@ function isRateLimited(ip: string): boolean {
   const recent = times.filter(t => now - t < RATE_LIMIT_WINDOW_MS)
   recent.push(now)
   ipRequestTimes.set(ip, recent)
+  // Drop idle IPs so the map can't grow without bound
+  if (ipRequestTimes.size > 10_000) {
+    for (const [key, ts] of ipRequestTimes) {
+      if (now - ts[ts.length - 1] >= RATE_LIMIT_WINDOW_MS) ipRequestTimes.delete(key)
+    }
+  }
   return recent.length > RATE_LIMIT_MAX
 }
 
@@ -51,9 +57,11 @@ function filterOptionChain(data: Record<string, unknown>): Record<string, unknow
 }
 
 export async function GET(request: NextRequest) {
-  // Rate limit by IP
+  // Rate limit by IP. Netlify sets x-nf-client-connection-ip itself; x-forwarded-for can be spoofed.
   const ip =
-    request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+    request.headers.get('x-nf-client-connection-ip') ??
+    request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+    'unknown'
 
   if (isRateLimited(ip)) {
     return NextResponse.json(
@@ -96,7 +104,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Mock mode — set USE_MOCK_DATA=true in .env.local to skip Schwab entirely
+  // Mock mode — set USE_MOCK_DATA=true in .env.local to skip the upstream API entirely
   if (process.env.USE_MOCK_DATA === 'true') {
     return NextResponse.json(mockOptionChain)
   }
@@ -106,12 +114,12 @@ export async function GET(request: NextRequest) {
   try {
     accessToken = await getValidAccessToken()
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Auth error'
-    // If no tokens stored, signal that OAuth setup is needed
-    if (message.includes('No Schwab tokens')) {
-      return NextResponse.json({ error: message, authRequired: true }, { status: 401 })
-    }
-    return NextResponse.json({ error: message }, { status: 401 })
+    // Details stay in the server log; visitors get a generic message
+    console.error('[quotes] access token unavailable:', err)
+    return NextResponse.json(
+      { error: 'Quotes are temporarily unavailable. Please try again later.' },
+      { status: 503 }
+    )
   }
 
   // Build Schwab API URL (only one symbol supported per option chain call)
@@ -134,20 +142,22 @@ export async function GET(request: NextRequest) {
       next: { revalidate: 0 },
     })
   } catch (err) {
+    console.error('[quotes] upstream fetch failed:', err)
     return NextResponse.json(
-      { error: 'Failed to reach Schwab API' },
+      { error: 'Failed to reach quote service' },
       { status: 502 }
     )
   }
 
   if (!schwabResponse.ok) {
     if (schwabResponse.status === 401) {
+      console.error('[quotes] upstream rejected access token (401)')
       return NextResponse.json(
-        { error: 'Schwab authorization failed — token may need refresh', authRequired: true },
-        { status: 401 }
+        { error: 'Quotes are temporarily unavailable. Please try again later.' },
+        { status: 503 }
       )
     }
-    let errorMessage = `Schwab API error: ${schwabResponse.status}`
+    let errorMessage = `Quote service error: ${schwabResponse.status}`
     try {
       const errBody = await schwabResponse.json()
       if (errBody?.errors?.[0]?.detail) {

@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/api/', '/owiadmin/'],
+      disallow: ['/api/'],
     },
     sitemap: 'https://www.optionswhatif.com/sitemap.xml',
   }

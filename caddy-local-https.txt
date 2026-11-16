@@ -62,7 +62,7 @@ Then visit https://127.0.0.1:8080 in your browser.
 
 SCHWAB AUTH FLOW
 ----------------
-1. Visit https://127.0.0.1:8080/api/auth/schwab/login
+1. Visit https://127.0.0.1:8080/api/admin/login
 2. Log in on Schwab's website
 3. Schwab redirects back to https://127.0.0.1:8080/api/auth/schwab/callback
 4. Tokens are saved to the local Netlify Blobs store
