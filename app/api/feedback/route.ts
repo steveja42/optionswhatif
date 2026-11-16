@@ -4,6 +4,7 @@ import type { FeedbackPayload } from '@/lib/types'
 
 const ALLOWED_TYPES = ['bug report', 'feature request', 'testimonial', 'other']
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const SOURCE_RE = /^[A-Za-z0-9_.-]{1,40}$/
 
 /** Verify a reCAPTCHA v2 token with Google. */
 async function verifyRecaptcha(token: string, remoteIp: string | null): Promise<boolean> {
@@ -74,10 +75,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'reCAPTCHA verification failed. Please try again.' }, { status: 400 })
   }
 
-  // Determine source from ?source= query param
+  // Determine source from ?source= query param (e.g. "sheets"). It goes into the email
+  // subject, so only accept a short plain label.
   const url = new URL(request.url)
-  const sourceParam = url.searchParams.get('source')
-  body.source = sourceParam || 'OptionsWhatIf-Nextjs'
+  const sourceParam = url.searchParams.get('source') ?? ''
+  body.source = SOURCE_RE.test(sourceParam) ? sourceParam : 'OptionsWhatIf-Nextjs'
 
   const clean: FeedbackPayload = {
     source: body.source,

@@ -74,7 +74,6 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
     this.setState({ isLoading: true, showFailure: false })
 
     const data = {
-      source: 'optionsWhatIf',
       type: this.state.type,
       name: this.state.name,
       email: this.state.email,
@@ -84,7 +83,10 @@ export class FeedbackForm extends Component<Record<string, never>, FeedbackState
     }
 
     try {
-      const response = await fetch('/api/feedback', {
+      // Pass along ?source= from this page's URL (e.g. "sheets" from the add-on's link);
+      // the API reads it from the query string, not the body
+      const source = new URLSearchParams(window.location.search).get('source')
+      const response = await fetch(`/api/feedback${source ? `?source=${encodeURIComponent(source)}` : ''}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
