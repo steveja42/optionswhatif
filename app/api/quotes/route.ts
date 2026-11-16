@@ -24,11 +24,37 @@ function isRateLimited(ip: string): boolean {
   return recent.length > RATE_LIMIT_MAX
 }
 
+// --- Same-site check ---
+// Only the calculator page on this site should call this route. Browsers send
+// Sec-Fetch-Site (and Referer) automatically and pages can't fake them, so this stops other
+// websites and casual scripts. A determined script can copy the headers, so this raises the
+// bar rather than being real authentication; the cache and rate limit cap the rest.
+function isFromOwnSite(request: NextRequest): boolean {
+  const fetchSite = request.headers.get('sec-fetch-site')
+  if (fetchSite) return fetchSite === 'same-origin'
+
+  // Older browsers without Sec-Fetch-*: require a Referer from this same host
+  const referer = request.headers.get('referer')
+  const host = request.headers.get('host')
+  if (!referer || !host) return false
+  try {
+    return new URL(referer).host === host
+  } catch {
+    return false
+  }
+}
+
 // --- Input validation ---
 const SYMBOL_RE = /^[A-Z]{1,5}(:[A-Z]{1,5})?$/
 const MAX_SYMBOLS = 5
 const VALID_CONTRACT_TYPES = new Set(['CALL', 'PUT', 'ALL'])
 const MAX_STRIKE_COUNT = 50
+
+// How long Netlify's CDN may reuse a successful option chain response (also the max quote age)
+const CDN_CACHE_SECONDS = 5
+
+// Longest upstream error message passed through to visitors
+const MAX_ERROR_LENGTH = 300
 
 function validateSymbols(raw: string): string[] | null {
   const symbols = raw
@@ -57,6 +83,10 @@ function filterOptionChain(data: Record<string, unknown>): Record<string, unknow
 }
 
 export async function GET(request: NextRequest) {
+  if (!isFromOwnSite(request)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
   // Rate limit by IP. Netlify sets x-nf-client-connection-ip itself; x-forwarded-for can be spoofed.
   const ip =
     request.headers.get('x-nf-client-connection-ip') ??
@@ -150,35 +180,55 @@ export async function GET(request: NextRequest) {
   }
 
   if (!schwabResponse.ok) {
-    if (schwabResponse.status === 401) {
-      console.error('[quotes] upstream rejected access token (401)')
+    const status = schwabResponse.status
+    const upstreamBody = await schwabResponse.text().catch(() => '')
+    // Full upstream error always goes to the server log
+    console.error(`[quotes] upstream error (${status}) for ${symbol}:`, upstreamBody)
+
+    // Auth and server failures can mention our token or account setup — keep those generic
+    if (status === 401 || status === 403 || status >= 500) {
       return NextResponse.json(
         { error: 'Quotes are temporarily unavailable. Please try again later.' },
         { status: 503 }
       )
     }
-    let errorMessage = `Quote service error: ${schwabResponse.status}`
+
+    // Other errors (bad request, rate limit, ...) are about the request, so pass Schwab's reason along
+    let errorMessage = `Quote service error: ${status}`
     try {
-      const errBody = await schwabResponse.json()
+      const errBody = JSON.parse(upstreamBody)
       if (errBody?.errors?.[0]?.detail) {
         const e = errBody.errors[0]
-        errorMessage = e.source?.parameter
-          ? `${e.detail}: ${e.source.parameter}`
-          : e.detail
+        errorMessage = e.source?.parameter ? `${e.detail}: ${e.source.parameter}` : e.detail
       } else if (errBody?.message) {
         errorMessage = errBody.message
       } else if (typeof errBody === 'string') {
         errorMessage = errBody
       }
-    } catch {}
+    } catch {
+      if (upstreamBody) errorMessage = `${errorMessage} ${upstreamBody}`
+    }
     return NextResponse.json(
-      { error: errorMessage },
-      { status: schwabResponse.status >= 500 ? 502 : schwabResponse.status }
+      { error: String(errorMessage).slice(0, MAX_ERROR_LENGTH) },
+      { status }
     )
   }
 
   const raw = await schwabResponse.json()
   const filtered = filterOptionChain(raw as Record<string, unknown>)
 
-  return NextResponse.json(filtered)
+  // Let Netlify's CDN serve repeat requests for the same chain for a few seconds, so
+  // popular symbols (or a scraper hammering one) don't each cost a Schwab API call.
+  // Only successful responses get this header, so errors are never cached.
+  return NextResponse.json(filtered, {
+    headers: {
+      // No stale-while-revalidate: a quote is never served older than CDN_CACHE_SECONDS
+      'Netlify-CDN-Cache-Control': `public, durable, s-maxage=${CDN_CACHE_SECONDS}`,
+      // The cache key must include these, or one symbol's chain would be served for another.
+      // Any other query params are ignored, so random params can't be used to bypass the cache.
+      // Varying on Sec-Fetch-Site keeps requests without it from being answered from the cache,
+      // so they reach the same-site check above.
+      'Netlify-Vary': 'query=symbols|contractType|strikeCount,header=Sec-Fetch-Site',
+    },
+  })
 }
