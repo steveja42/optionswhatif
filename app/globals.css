@@ -342,6 +342,18 @@ th input {
   padding: 8px;
 }
 
+/* Pulsing label prompting the user to fill in the next calculator field */
+.label-pulse {
+  display: inline-block;
+  color: var(--color-accent);
+  font-weight: 600;
+  animation: label-pulse 1.4s ease-in-out infinite;
+}
+@keyframes label-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(1.06); }
+}
+
 /* Mobile menu (below Bootstrap's sm breakpoint) */
 .navbar .navbar-toggler {
   padding: 0.3rem 0.5rem;
@@ -674,6 +686,7 @@ th input {
   .section-nav-link,
   .faq-item summary::after { transition: none; }
   .feature-card:hover { transform: none; }
+  .label-pulse { animation: none; }
 }
 
 @media (max-width: 575.98px) {

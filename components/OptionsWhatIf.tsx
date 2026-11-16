@@ -130,10 +130,17 @@ export function OptionsWhatIf() {
     [symbol, strikeCount, areNoWrongExpirationDates]
   )
 
+  // True while refreshExpirations briefly clears the selection, so the dates label doesn't flash
+  const refreshingDates = useRef(false)
+
   const refreshExpirations = useCallback((dates = datesSelected) => {
     if (dates.length > 0) {
+      refreshingDates.current = true
       setDatesSelected([])
-      setTimeout(() => setDatesSelected(dates), 0)
+      setTimeout(() => {
+        refreshingDates.current = false
+        setDatesSelected(dates)
+      }, 0)
     }
   }, [datesSelected])
 
@@ -264,6 +271,11 @@ export function OptionsWhatIf() {
 
   const comboType: ComboType = strategy === 'single' ? (type as ComboType) : (strategy as ComboType)
 
+  // Pulse the label of the next field the user needs to fill in
+  const pulseSymbol = !symbol
+  const pulseDates =
+    !!symbol && !!dateOptions?.length && datesSelected.length === 0 && !refreshingDates.current
+
   return (
     <div>
       {/* Form bar */}
@@ -284,7 +296,7 @@ export function OptionsWhatIf() {
           )}
 
           <div className="form-group">
-            <label>Stock Symbol</label>
+            <label className={pulseSymbol ? 'label-pulse' : undefined}>Stock Symbol</label>
             <input
               ref={symbolInputRef}
               name="symbol"
@@ -349,7 +361,7 @@ export function OptionsWhatIf() {
           </div>
 
           <div className="form-group">
-            <label>Choose option dates (Ctrl + Click)</label>
+            <label className={pulseDates ? 'label-pulse' : undefined}>Choose option dates (Ctrl + Click)</label>
             <select
               name="dates"
               multiple
