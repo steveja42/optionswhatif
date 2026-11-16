@@ -1,22 +1,25 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
+
+// The theme lives on <html data-theme>, set before hydration by the init script in app/layout.tsx
+function subscribe(onChange: () => void) {
+  const observer = new MutationObserver(onChange)
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+  return () => observer.disconnect()
+}
+
+const getSnapshot = () => document.documentElement.getAttribute('data-theme') === 'dark'
+const getServerSnapshot = () => false
 
 export function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false)
-
-  useEffect(() => {
-    const stored = localStorage.getItem('theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    setIsDark(stored === 'dark' || (stored === null && prefersDark))
-  }, [])
+  const isDark = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   function toggle() {
     const next = isDark ? 'light' : 'dark'
     document.documentElement.setAttribute('data-theme', next)
     document.documentElement.setAttribute('data-bs-theme', next)
     try { localStorage.setItem('theme', next) } catch { /* private browsing */ }
-    setIsDark(next === 'dark')
   }
 
   return (

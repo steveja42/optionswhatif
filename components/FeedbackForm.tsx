@@ -196,7 +196,6 @@ export function Donate() {
           <input type="hidden" name="cmd" value="_donations" />
           <input type="hidden" name="business" value="W8CNL6D983WVS" />
           <input type="hidden" name="currency_code" value="USD" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" className="paypal-btn" />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />

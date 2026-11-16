@@ -119,7 +119,7 @@ export async function sendMail(subject = 'subject  ✔', text = 'email text', re
 	const emailParams = new EmailParams()
 		.setFrom(sentFrom)
 		.setTo(recipients)
-		.setReplyTo(sentFrom)
+		.setReplyTo(replyTo ? new Sender(replyTo) : sentFrom)
 		.setSubject(subject)
 		.setText(text);
 

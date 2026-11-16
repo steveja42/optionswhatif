@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getProfit, getDefaultPricePoints, currencyFormat, percentFormat, parseLocaleNumber } from './calculations'
+import { getProfit, getDefaultPricePoints, currencyFormat, percentFormat, parseLocaleNumber, pricePointPercentages } from './calculations'
 
 describe('getProfit', () => {
   describe('PUT buying', () => {
@@ -82,22 +82,22 @@ describe('getProfit', () => {
 })
 
 describe('getDefaultPricePoints', () => {
-  it('returns 7 price points', () => {
-    expect(getDefaultPricePoints(100, 'PUT')).toHaveLength(7)
+  it('returns one price point per percentage', () => {
+    expect(getDefaultPricePoints(100, 'PUT')).toHaveLength(pricePointPercentages.length)
   })
 
   it('PUT price points go downward from underlying', () => {
     const pts = getDefaultPricePoints(200, 'PUT').map(parseLocaleNumber)
-    expect(pts[0]).toBe(200) // 0% change
-    expect(pts[pts.length - 1]).toBe(0) // 100% down? actually 1.0 * (1-1) = 0
-    // all should be <= underlyingPrice
-    pts.forEach(p => expect(p).toBeLessThanOrEqual(200.01))
+    expect(pts[0]).toBe(180) // 10% down
+    expect(pts[pts.length - 1]).toBe(0) // 100% down
+    pts.forEach(p => expect(p).toBeLessThan(200))
   })
 
   it('CALL price points go upward from underlying', () => {
     const pts = getDefaultPricePoints(200, 'CALL').map(parseLocaleNumber)
-    expect(pts[0]).toBe(200)
-    pts.forEach(p => expect(p).toBeGreaterThanOrEqual(199.99))
+    expect(pts[0]).toBe(220) // 10% up
+    expect(pts[pts.length - 1]).toBe(400) // 100% up
+    pts.forEach(p => expect(p).toBeGreaterThan(200))
   })
 
   it('straddle price points go upward like CALL', () => {

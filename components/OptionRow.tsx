@@ -24,7 +24,7 @@ interface OptionRowProps {
 export function OptionRow({ strike, data, type, amBuying, put, call, pricePoints }: OptionRowProps) {
   if (!data) return null
 
-  let leftPart: React.ReactNode[] = []
+  const leftPart: React.ReactNode[] = []
   const coreVals: React.ReactNode[] = []
   let breakeven = 0
   let option: OptionPriceInfo

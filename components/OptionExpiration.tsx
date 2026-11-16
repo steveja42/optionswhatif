@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { OptionChainN, ComboType } from '@/lib/types'
-import { getDefaultPricePoints, parseLocaleNumber, currencyFormat } from '@/lib/calculations'
+import { OptionChainN, ComboType, OptionPriceInfo } from '@/lib/types'
+import { getDefaultPricePoints, parseLocaleNumber } from '@/lib/calculations'
 import { OptionRow } from './OptionRow'
 
 interface OptionExpirationProps {
@@ -116,7 +116,7 @@ export function OptionExpiration({ title, data, date, type, amBuying }: OptionEx
       amBuying={amBuying}
       put={value[0]}
       pricePoints={pricePoints}
-      call={data.callExpDateMap?.[date]?.[strike]?.[0]!}
+      call={data.callExpDateMap?.[date]?.[strike]?.[0] as OptionPriceInfo}
     />
   ))
 
