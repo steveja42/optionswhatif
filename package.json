@@ -12,23 +12,24 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@netlify/blobs": "^10.7.0",
-    "mailersend": "^2.6.0",
+    "@netlify/blobs": "^10.7.13",
+    "mailersend": "^2.8.0",
     "next": "16.4.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "@netlify/plugin-nextjs": "^5.15.8",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "concurrently": "^9.2.1",
-    "eslint": "^9",
+    "@netlify/plugin-nextjs": "^5.16.7",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^20.19.43",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "concurrently": "^9.2.5",
+    "eslint": "^9.39.5",
     "eslint-config-next": "16.1.6",
-    "tailwindcss": "^4",
-    "typescript": "^5",
-    "vitest": "^4.1.2"
+    "tailwindcss": "^4.3.5",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.8",
+    "vitest": "^4.1.12"
   }
 }
